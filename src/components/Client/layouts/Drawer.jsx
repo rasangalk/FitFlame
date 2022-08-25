@@ -11,6 +11,7 @@ import Typography from "@mui/material/Typography";
 import GroupsIcon from "@mui/icons-material/Groups";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import EventNoteIcon from "@mui/icons-material/EventNote";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { styled } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -157,6 +158,21 @@ export default function MiniDrawer() {
               />
             </StyledListItemButton>
           )}
+        </ListItem>
+      </StyledList>
+      <StyledList>
+        <ListItem disablePadding sx={{ marginTop: 35 }}>
+          <StyledListItemButton
+            onClick={() => {
+              navigate("/blogs");
+            }}
+          >
+            <LogoutIcon
+              sx={{
+                color: "#2A3036",
+              }}
+            />
+          </StyledListItemButton>
         </ListItem>
       </StyledList>
     </Box>
