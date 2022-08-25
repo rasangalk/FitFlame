@@ -13,7 +13,8 @@ import ListAltIcon from "@mui/icons-material/ListAlt";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import { styled } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-
+import { useDispatch } from "react-redux";
+import { setTileName } from "../../../redux/AppbarTitleSlice";
 const drawerWidth = 64;
 
 const StyledList = styled(List)({
@@ -28,9 +29,9 @@ const StyledListItemButton = styled(ListItemButton)({
     fontSize: 25,
   },
   "&:hover": {
-    background: "#deebff",
+    background: "rgba(42, 48, 54, 0.16)",
     "& svg": {
-      color: "#0d6efd",
+      color: "#2A3036",
     },
   },
   borderRadius: 10,
@@ -39,6 +40,7 @@ const StyledListItemButton = styled(ListItemButton)({
 });
 
 export default function MiniDrawer() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   console.log("Pathname", location.pathname);
@@ -47,12 +49,12 @@ export default function MiniDrawer() {
     <Box>
       <StyledList>
         <ListItem disablePadding>
-          {location.pathname === "/test" ? (
+          {location.pathname === "/blogs" ? (
             <StyledListItemButton
-              sx={{ background: "#0d6efd" }}
+              sx={{ background: "#2A3036" }}
               onClick={() => {
-                // dispatch(setTileName("Dashboard"));
-                navigate("/");
+                dispatch(setTileName("Blogs"));
+                navigate("/blogs");
               }}
             >
               <FeedIcon
@@ -64,8 +66,8 @@ export default function MiniDrawer() {
           ) : (
             <StyledListItemButton
               onClick={() => {
-                // dispatch(setTileName("Dashboard"));
-                navigate("/");
+                dispatch(setTileName("Blogs"));
+                navigate("/blogs");
               }}
             >
               <FeedIcon
@@ -77,12 +79,12 @@ export default function MiniDrawer() {
           )}
         </ListItem>
         <ListItem disablePadding>
-          {location.pathname === "/test" ? (
+          {location.pathname === "/trainers" ? (
             <StyledListItemButton
-              sx={{ background: "#0d6efd" }}
+              sx={{ background: "#2A3036" }}
               onClick={() => {
-                // dispatch(setTileName("Dashboard"));
-                navigate("/");
+                dispatch(setTileName("Trainers"));
+                navigate("/trainers");
               }}
             >
               <GroupsIcon
@@ -94,8 +96,8 @@ export default function MiniDrawer() {
           ) : (
             <StyledListItemButton
               onClick={() => {
-                // dispatch(setTileName("Dashboard"));
-                navigate("/");
+                dispatch(setTileName("Trainers"));
+                navigate("/trainers");
               }}
             >
               <GroupsIcon
@@ -107,12 +109,12 @@ export default function MiniDrawer() {
           )}
         </ListItem>
         <ListItem disablePadding>
-          {location.pathname === "/test" ? (
+          {location.pathname === "/orders" ? (
             <StyledListItemButton
-              sx={{ background: "#0d6efd" }}
+              sx={{ background: "#2A3036" }}
               onClick={() => {
-                // dispatch(setTileName("Dashboard"));
-                navigate("/");
+                dispatch(setTileName("Order History"));
+                navigate("/orders");
               }}
             >
               <ListAltIcon
@@ -124,8 +126,8 @@ export default function MiniDrawer() {
           ) : (
             <StyledListItemButton
               onClick={() => {
-                // dispatch(setTileName("Dashboard"));
-                navigate("/");
+                dispatch(setTileName("Order History"));
+                navigate("/orders");
               }}
             >
               <ListAltIcon
@@ -137,12 +139,12 @@ export default function MiniDrawer() {
           )}
         </ListItem>
         <ListItem disablePadding>
-          {location.pathname === "/test" ? (
+          {location.pathname === "/schedules" ? (
             <StyledListItemButton
-              sx={{ background: "#0d6efd" }}
+              sx={{ background: "#2A3036" }}
               onClick={() => {
-                // dispatch(setTileName("Dashboard"));
-                navigate("/");
+                dispatch(setTileName("Schedules"));
+                navigate("/schedules");
               }}
             >
               <EventNoteIcon
@@ -154,8 +156,8 @@ export default function MiniDrawer() {
           ) : (
             <StyledListItemButton
               onClick={() => {
-                // dispatch(setTileName("Dashboard"));
-                navigate("/");
+                dispatch(setTileName("Schedules"));
+                navigate("/schedules");
               }}
             >
               <EventNoteIcon

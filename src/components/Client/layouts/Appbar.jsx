@@ -8,8 +8,11 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import { Divider } from "@mui/material";
+import { useSelector } from "react-redux";
 
 export default function MenuAppBar() {
+  const title = useSelector((state) => state.setTitle.title);
+
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleMenu = (event) => {
@@ -75,7 +78,7 @@ export default function MenuAppBar() {
               },
             }}
           >
-            Trainers
+            {title}
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <div>
