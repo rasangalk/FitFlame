@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import MenuAppBar from "../../../components/Client/layouts/Appbar";
 import MiniDrawer from "../../../components/Client/layouts/Drawer";
+import TrainersSubPage from "../TrainersSubPage";
 
 export default function TrainersList() {
   return (
@@ -12,7 +13,9 @@ export default function TrainersList() {
         <Grid item md={0.5}>
           <MiniDrawer />
         </Grid>
-        <Grid item md={11.5}></Grid>
+        <Grid item md={11.5}>
+          <TrainersSubPage />
+        </Grid>
       </Grid>
     </Box>
   );

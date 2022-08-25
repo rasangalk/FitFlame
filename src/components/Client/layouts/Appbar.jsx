@@ -30,9 +30,9 @@ export default function MenuAppBar() {
         sx={{
           bgcolor: "#2A3036",
           height: "64px",
-          boxShadow: "0 8px 6px -11px #999",
+          boxShadow: "0 8px 6px -7px #999",
           filter:
-            "drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.14)) drop-shadow(0px 1px 3px rgba(0, 0, 0, 0.12))",
+            "drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.18)) drop-shadow(0px 1px 3px rgba(0, 0, 0, 0.12))",
         }}
       >
         <Toolbar>
