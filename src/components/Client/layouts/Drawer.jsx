@@ -13,8 +13,7 @@ import ListAltIcon from "@mui/icons-material/ListAlt";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import { styled } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setTileName } from "../../../redux/AppbarTitleSlice";
+
 const drawerWidth = 64;
 
 const StyledList = styled(List)({
@@ -40,7 +39,6 @@ const StyledListItemButton = styled(ListItemButton)({
 });
 
 export default function MiniDrawer() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   console.log("Pathname", location.pathname);
@@ -53,7 +51,6 @@ export default function MiniDrawer() {
             <StyledListItemButton
               sx={{ background: "#2A3036" }}
               onClick={() => {
-                dispatch(setTileName("Blogs"));
                 navigate("/blogs");
               }}
             >
@@ -66,7 +63,6 @@ export default function MiniDrawer() {
           ) : (
             <StyledListItemButton
               onClick={() => {
-                dispatch(setTileName("Blogs"));
                 navigate("/blogs");
               }}
             >
@@ -83,7 +79,6 @@ export default function MiniDrawer() {
             <StyledListItemButton
               sx={{ background: "#2A3036" }}
               onClick={() => {
-                dispatch(setTileName("Trainers"));
                 navigate("/trainers");
               }}
             >
@@ -96,7 +91,6 @@ export default function MiniDrawer() {
           ) : (
             <StyledListItemButton
               onClick={() => {
-                dispatch(setTileName("Trainers"));
                 navigate("/trainers");
               }}
             >
@@ -113,7 +107,6 @@ export default function MiniDrawer() {
             <StyledListItemButton
               sx={{ background: "#2A3036" }}
               onClick={() => {
-                dispatch(setTileName("Order History"));
                 navigate("/orders");
               }}
             >
@@ -126,7 +119,6 @@ export default function MiniDrawer() {
           ) : (
             <StyledListItemButton
               onClick={() => {
-                dispatch(setTileName("Order History"));
                 navigate("/orders");
               }}
             >
@@ -143,7 +135,6 @@ export default function MiniDrawer() {
             <StyledListItemButton
               sx={{ background: "#2A3036" }}
               onClick={() => {
-                dispatch(setTileName("Schedules"));
                 navigate("/schedules");
               }}
             >
@@ -156,7 +147,6 @@ export default function MiniDrawer() {
           ) : (
             <StyledListItemButton
               onClick={() => {
-                dispatch(setTileName("Schedules"));
                 navigate("/schedules");
               }}
             >
