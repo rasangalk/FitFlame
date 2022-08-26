@@ -21,7 +21,7 @@ const StyledList = styled(List)({
   display: "flex",
   flexDirection: "column",
   gap: 10,
-  marginTop: 20,
+  marginTop: 70,
 });
 
 const StyledListItemButton = styled(ListItemButton)({
@@ -160,32 +160,25 @@ export default function MiniDrawer() {
           )}
         </ListItem>
       </StyledList>
-      <StyledList>
-        <ListItem disablePadding sx={{ marginTop: 35 }}>
-          <StyledListItemButton
-            onClick={() => {
-              navigate("/blogs");
-            }}
-          >
-            <LogoutIcon
-              sx={{
-                color: "#2A3036",
-              }}
-            />
-          </StyledListItemButton>
-        </ListItem>
-      </StyledList>
     </Box>
   );
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
+    <Box
+      flex={1}
+      p={2}
+      sx={{
+        display: { xs: "none", sm: "block" },
+        width: "100%",
+      }}
+    >
       <Box
+        position="fixed"
         component="nav"
         sx={{
           width: { sm: drawerWidth },
           flexShrink: { sm: 0 },
+          height: "100vh",
         }}
         aria-label="mailbox folders"
       >
@@ -196,15 +189,29 @@ export default function MiniDrawer() {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
-              marginTop: 8.3,
             },
           }}
           open
         >
           {drawer}
+          <StyledList sx={{ position: "fixed", bottom: 0 }}>
+            <ListItem disablePadding>
+              <StyledListItemButton
+                onClick={() => {
+                  navigate("/blogs");
+                }}
+              >
+                <LogoutIcon
+                  sx={{
+                    color: "#2A3036",
+                  }}
+                />
+              </StyledListItemButton>
+            </ListItem>
+          </StyledList>
         </Drawer>
       </Box>
-      <Box
+      {/* <Box
         component="main"
         sx={{
           flexGrow: 1,
@@ -213,8 +220,7 @@ export default function MiniDrawer() {
         }}
       >
         <Toolbar />
-        <Typography paragraph></Typography>
-      </Box>
+      </Box> */}
     </Box>
   );
 }
