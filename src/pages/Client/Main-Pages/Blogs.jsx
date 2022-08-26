@@ -12,7 +12,7 @@ function Blogs() {
           <MiniDrawer />
         </Grid>
         <Grid item md={11.5}>
-          blogs
+          blogs new
         </Grid>
       </Grid>
     </Box>
