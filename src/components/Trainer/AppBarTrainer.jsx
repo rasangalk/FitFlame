@@ -23,8 +23,11 @@ import {
 } from "@mui/material";
 
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AppBarTrainer = ({ trainerName }) => {
+  const navigate = useNavigate();
+
   const [state, setState] = useState({
     left: false,
   });
@@ -52,7 +55,7 @@ const AppBarTrainer = ({ trainerName }) => {
     >
       <List>
         <ListItem disablePadding>
-          <ListItemButton>
+          <ListItemButton onClick={() => navigate("/trainer/clients")}>
             <ListItemIcon>
               <PeopleAlt />
             </ListItemIcon>
@@ -61,7 +64,7 @@ const AppBarTrainer = ({ trainerName }) => {
         </ListItem>
 
         <ListItem disablePadding>
-          <ListItemButton>
+          <ListItemButton onClick={() => navigate("/trainer/orders")}>
             <ListItemIcon>
               <ShoppingBag />
             </ListItemIcon>
@@ -70,7 +73,7 @@ const AppBarTrainer = ({ trainerName }) => {
         </ListItem>
 
         <ListItem disablePadding>
-          <ListItemButton>
+          <ListItemButton onClick={() => navigate("/trainer/packages")}>
             <ListItemIcon>
               <FactCheck />
             </ListItemIcon>
