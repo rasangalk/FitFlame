@@ -99,8 +99,7 @@ const AppBarTrainer = ({ trainerName }) => {
             <Menu />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            {/* {trainerName} */}
-            Hi, Randy!
+            {trainerName}
           </Typography>
 
           <div>

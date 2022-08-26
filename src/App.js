@@ -7,7 +7,8 @@ import TrainersList from "./pages/Client/Main-Pages/Trainers-List";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setTileName } from "./redux/AppbarTitleSlice";
-import AppBarTrainer from "./components/Trainer/AppBarTrainer";
+import TrainerClients from "./pages/Trainer/MainPages/Clients";
+import TrainerOrders from "./pages/Trainer/MainPages/Orders";
 
 export function App() {
   const dispatch = useDispatch();
@@ -33,7 +34,8 @@ export function App() {
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/schedules" element={<Schedules />} />
-        <Route path="/trainer" element={<AppBarTrainer />} />
+        <Route path="/trainer/clients" element={<TrainerClients />} />
+        <Route path="/trainer/orders" element={<TrainerOrders />} />
       </Routes>
     </div>
   );
