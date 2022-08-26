@@ -1,9 +1,6 @@
 import {
   AccountCircle,
   FactCheck,
-  FormatListBulleted,
-  Inbox,
-  Mail,
   Menu,
   PeopleAlt,
   ShoppingBag,
@@ -11,10 +8,7 @@ import {
 
 import {
   AppBar,
-  Avatar,
   Box,
-  Button,
-  Divider,
   IconButton,
   List,
   ListItem,
@@ -25,6 +19,7 @@ import {
   SwipeableDrawer,
   Toolbar,
   Typography,
+  Menu as Men,
 } from "@mui/material";
 
 import React, { useState } from "react";
@@ -86,6 +81,9 @@ const AppBarTrainer = ({ trainerName }) => {
     </Box>
   );
 
+  // Stores profile menu state
+  const [MenuStatus, setMenuStatus] = useState(false);
+
   return (
     <Box>
       <AppBar position="static" sx={{ backgroundColor: "#2A3036" }}>
@@ -111,7 +109,7 @@ const AppBarTrainer = ({ trainerName }) => {
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
-              // onClick={handleMenu}
+              onClick={() => setMenuStatus(true)}
               color="inherit"
             >
               <AccountCircle />
@@ -132,6 +130,30 @@ const AppBarTrainer = ({ trainerName }) => {
           </SwipeableDrawer>
         </React.Fragment>
       ))}
+
+      <Men
+        id="demo-positioned-menu"
+        aria-labelledby="demo-positioned-button"
+        open={MenuStatus}
+        onClose={() => setMenuStatus(false)}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <MenuItem //onClick={handleClose}
+        >
+          Profile
+        </MenuItem>
+        <MenuItem //onClick={handleClose}
+        >
+          Logout
+        </MenuItem>
+      </Men>
     </Box>
   );
 };
