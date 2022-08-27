@@ -4,6 +4,7 @@ import Blogs from "./pages/Client/Main-Pages/Blogs";
 import Orders from "./pages/Client/Main-Pages/Orders";
 import Schedules from "./pages/Client/Main-Pages/Schedules";
 import TrainersList from "./pages/Client/Main-Pages/Trainers-List";
+import Delete from "./pages/Admin/Delete";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setTileName } from "./redux/AppbarTitleSlice";
@@ -32,6 +33,7 @@ export function App() {
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/schedules" element={<Schedules />} />
+        <Route path="/admin" element={<Delete />} />
       </Routes>
     </div>
   );
