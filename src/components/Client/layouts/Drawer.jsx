@@ -42,7 +42,6 @@ const StyledListItemButton = styled(ListItemButton)({
 export default function MiniDrawer() {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log("Pathname", location.pathname);
 
   const drawer = (
     <Box>
@@ -76,7 +75,9 @@ export default function MiniDrawer() {
           )}
         </ListItem>
         <ListItem disablePadding>
-          {location.pathname === "/trainers" ? (
+          {location.pathname === "/trainers" ||
+          location.pathname === "/trainer-details" ||
+          location.pathname === "/make-order" ? (
             <StyledListItemButton
               sx={{ background: "#2A3036" }}
               onClick={() => {
@@ -104,7 +105,9 @@ export default function MiniDrawer() {
           )}
         </ListItem>
         <ListItem disablePadding>
-          {location.pathname === "/orders" ? (
+          {location.pathname === "/orders" ||
+          location.pathname === "/view-order" ||
+          location.pathname === "/update-order" ? (
             <StyledListItemButton
               sx={{ background: "#2A3036" }}
               onClick={() => {
@@ -211,16 +214,6 @@ export default function MiniDrawer() {
           </StyledList>
         </Drawer>
       </Box>
-      {/* <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-        }}
-      >
-        <Toolbar />
-      </Box> */}
     </Box>
   );
 }
