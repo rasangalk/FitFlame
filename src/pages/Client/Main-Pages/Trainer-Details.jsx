@@ -1,22 +1,12 @@
-import * as React from "react";
+import { Box, Grid } from "@mui/material";
+import React from "react";
 import MenuAppBar from "../../../components/Client/layouts/Appbar";
 import MiniDrawer from "../../../components/Client/layouts/Drawer";
-import TrainersSubPage from "../TrainersSubPage";
+import TrainerDetailsSubPage from "../TrainerDetailsSubPage";
 import classes from "./CustomGrid.module.css";
 
-export default function TrainersList() {
+function TrainerDetails() {
   return (
-    // <Box direction="row" spacing={0} justifyContent="space-between">
-    //   <MenuAppBar />
-    //   <Grid container spacing={0}>
-    //     <Grid item md={1}>
-    //       <MiniDrawer />
-    //     </Grid>
-    //     <Grid item md={11}>
-    //       <TrainersSubPage />
-    //     </Grid>
-    //   </Grid>
-    // </Box>
     <div>
       <div className={classes.row}>
         <div className={`${classes["col"]} ${classes["col-12"]}`}>
@@ -28,9 +18,11 @@ export default function TrainersList() {
           <MiniDrawer />
         </div>
         <div className={`${classes["col"]} ${classes["col-11"]}`}>
-          <TrainersSubPage />
+          <TrainerDetailsSubPage />
         </div>
       </div>
     </div>
   );
 }
+
+export default TrainerDetails;
