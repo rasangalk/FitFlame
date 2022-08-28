@@ -64,7 +64,7 @@ const Orders = () => {
 
   return (
     <div>
-      <AppBarTrainer trainerName="Hi, Randy!"></AppBarTrainer>
+      <AppBarTrainer trainerName="Hi, Randy!" />
       <Box sx={{ margin: "5rem 5rem 1rem" }}>
         <Box
           sx={{

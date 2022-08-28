@@ -13,6 +13,7 @@ import TrainerPackages from "./pages/Trainer/MainPages/Packages";
 import TrainerOrderDetaills from "./pages/Trainer/MainPages/OrderDetaills";
 import TrainerPlan from "./pages/Trainer/MainPages/Plan";
 import TrainerViewPlan from "./pages/Trainer/MainPages/ViewPlan";
+import TrainerAboutProfile from "./pages/Trainer/MainPages/AboutProfile";
 
 export function App() {
   const dispatch = useDispatch();
@@ -44,6 +45,7 @@ export function App() {
         <Route path="/trainer/orders/:id" element={<TrainerOrderDetaills />} />
         <Route path="/trainer/create-plan/:id" element={<TrainerPlan />} />
         <Route path="/trainer/plan/:id" element={<TrainerViewPlan />} />
+        <Route path="/trainer/about" element={<TrainerAboutProfile />} />
       </Routes>
     </div>
   );
