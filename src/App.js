@@ -17,6 +17,7 @@ import TrainerAboutProfile from "./pages/Trainer/MainPages/AboutProfile";
 import TrainerProfile from "./pages/Trainer/MainPages/Profile";
 import TrainerProfileEdit from "./pages/Trainer/MainPages/ProfileEdit";
 import TrainerCreatepackage from "./pages/Trainer/MainPages/Createpackage";
+import TrainerUpdatePackage from "./pages/Trainer/MainPages/UpdatePackage";
 
 export function App() {
   const dispatch = useDispatch();
@@ -55,6 +56,10 @@ export function App() {
         <Route
           path="/trainer/package-create"
           element={<TrainerCreatepackage />}
+        />
+        <Route
+          path="/trainer/package-edit"
+          element={<TrainerUpdatePackage />}
         />
       </Routes>
     </div>
