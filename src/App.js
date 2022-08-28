@@ -15,6 +15,7 @@ import TrainerPlan from "./pages/Trainer/MainPages/Plan";
 import TrainerViewPlan from "./pages/Trainer/MainPages/ViewPlan";
 import TrainerAboutProfile from "./pages/Trainer/MainPages/AboutProfile";
 import TrainerProfile from "./pages/Trainer/MainPages/Profile";
+import TrainerProfileEdit from "./pages/Trainer/MainPages/ProfileEdit";
 
 export function App() {
   const dispatch = useDispatch();
@@ -49,6 +50,7 @@ export function App() {
         <Route path="/trainer/about" element={<TrainerAboutProfile />} />
         <Route path="/trainer/about" element={<TrainerAboutProfile />} />
         <Route path="/trainer/profile" element={<TrainerProfile />} />
+        <Route path="/trainer/profile-edit" element={<TrainerProfileEdit />} />
       </Routes>
     </div>
   );
