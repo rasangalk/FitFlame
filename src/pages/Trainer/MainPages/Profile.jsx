@@ -80,6 +80,9 @@ const Profile = () => {
                   id="outlined-basic"
                   label="Name"
                   variant="outlined"
+                  InputProps={{
+                    readOnly: true,
+                  }}
                 />
                 <Box sx={{ display: "flex", gap: 2, width: "100%" }}>
                   <TextField
@@ -87,12 +90,18 @@ const Profile = () => {
                     id="outlined-basic"
                     label="Email"
                     variant="outlined"
+                    InputProps={{
+                      readOnly: true,
+                    }}
                   />
                   <TextField
                     sx={{ width: "100%", marginTop: "3rem" }}
                     id="outlined-basic"
                     label="Mobile"
                     variant="outlined"
+                    InputProps={{
+                      readOnly: true,
+                    }}
                   />
                 </Box>
                 <TextField
@@ -101,6 +110,9 @@ const Profile = () => {
                   label="About"
                   multiline
                   rows={5}
+                  InputProps={{
+                    readOnly: true,
+                  }}
                 />
                 <Button
                   sx={{
