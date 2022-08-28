@@ -7,21 +7,6 @@ const Profile = () => {
   const [selected, setSelected] = useState([]);
   const [imagePreview, setImagePreview] = useState(null);
 
-  const handleImageChange = (e) => {
-    const selected = e.target.files[0];
-    setSelected(selected);
-    const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/jpg"];
-    if (selected && ALLOWED_TYPES.includes(selected.type)) {
-      let reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(selected);
-    } else {
-      console.log("File type is not supported!");
-    }
-  };
-
   return (
     <Box sx={{ height: "100vh" }}>
       <AppBarTrainer trainerName="Hi, Randy!" />
