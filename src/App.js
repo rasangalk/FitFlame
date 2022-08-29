@@ -50,7 +50,6 @@ export function App() {
         <Route path="/trainer/create-plan/:id" element={<TrainerPlan />} />
         <Route path="/trainer/plan/:id" element={<TrainerViewPlan />} />
         <Route path="/trainer/about" element={<TrainerAboutProfile />} />
-        <Route path="/trainer/about" element={<TrainerAboutProfile />} />
         <Route path="/trainer/profile" element={<TrainerProfile />} />
         <Route path="/trainer/profile-edit" element={<TrainerProfileEdit />} />
         <Route

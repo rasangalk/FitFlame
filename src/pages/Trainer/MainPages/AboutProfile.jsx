@@ -2,10 +2,37 @@ import { Close } from "@mui/icons-material";
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import AppBarTrainer from "../../../components/Trainer/AppBarTrainer";
+import { db } from "../../../firebase-config";
+import { collection, doc, updateDoc } from "firebase/firestore";
+import { storage } from "./../../../firebase-config";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const AboutProfile = () => {
   const [selected, setSelected] = useState([]);
   const [imagePreview, setImagePreview] = useState(null);
+
+  const [About, setAbout] = useState();
+  const [ImageURL, setImageURL] = useState();
+
+  // update profile
+  const updateUser = async (id) => {
+    // getting specific user document with user ID
+    const userDoc = doc(db, "users", id);
+    const imageRef = ref(storage, `TrainerProfile/${selected.name}`);
+
+    uploadBytes(imageRef, selected).then(() => {
+      getDownloadURL(imageRef).then((url) => {
+        setImageURL(url);
+      });
+    });
+
+    const newFields = {
+      description: About,
+      rate: Math.floor(Math.random() * 6),
+      picture: ImageURL,
+    };
+    await updateDoc(userDoc, newFields);
+  };
 
   const handleImageChange = (e) => {
     const selected = e.target.files[0];
@@ -119,6 +146,7 @@ const AboutProfile = () => {
                   label="About"
                   multiline
                   rows={7}
+                  onChange={(e) => setAbout(e.target.value)}
                 />
                 <Button
                   sx={{
@@ -128,6 +156,7 @@ const AboutProfile = () => {
                     marginTop: "3rem",
                   }}
                   variant="contained"
+                  onClick={() => updateUser("5qO5w7dwRvzo3YeCoppe")}
                 >
                   save
                 </Button>
