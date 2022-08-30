@@ -1,4 +1,3 @@
-import { Close } from "@mui/icons-material";
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import AppBarTrainer from "../../../components/Trainer/AppBarTrainer";
