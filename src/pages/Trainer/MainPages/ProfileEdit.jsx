@@ -4,9 +4,9 @@ import React, { useEffect, useState } from "react";
 import AppBarTrainer from "../../../components/Trainer/AppBarTrainer";
 import { db } from "../../../firebase-config";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
 import { storage } from "./../../../firebase-config";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { useNavigate } from "react-router-dom";
 
 const ProfileEdit = () => {
   const navigate = useNavigate();
