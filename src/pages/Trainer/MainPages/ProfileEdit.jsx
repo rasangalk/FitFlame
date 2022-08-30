@@ -1,11 +1,96 @@
 import { Close } from "@mui/icons-material";
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AppBarTrainer from "../../../components/Trainer/AppBarTrainer";
+import { db } from "../../../firebase-config";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+import { storage } from "./../../../firebase-config";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const ProfileEdit = () => {
+  const navigate = useNavigate();
+
   const [selected, setSelected] = useState([]);
   const [imagePreview, setImagePreview] = useState(null);
+
+  const [Name, setName] = useState();
+  const [Email, setEmail] = useState();
+  const [Mobile, setMobile] = useState();
+  const [About, setAbout] = useState();
+
+  const trainerRef = doc(db, "users", "5qO5w7dwRvzo3YeCoppe");
+
+  useEffect(() => {
+    getDoc(trainerRef).then((doc) => {
+      setName(doc.data().name);
+      setEmail(doc.data().email);
+      setMobile(doc.data().mobile);
+      setAbout(doc.data().description);
+      setImagePreview(doc.data().picture);
+    });
+  }, []);
+
+  const updateProfile = async () => {
+    const trainerDoc = doc(db, "users", "5qO5w7dwRvzo3YeCoppe");
+
+    if (selected === "" && imagePreview === null) {
+      console.log("Please choose a cover image");
+    } else if (selected === "" && imagePreview !== "") {
+      /* this section handles if the user does not modify the image but other text fields*/
+      if (Name === "") {
+        console.log("Please fill the required fields!");
+      } else if (Email === "") {
+        console.log("Please fill the required fields!");
+      } else if (Mobile === "") {
+        console.log("Please select an album category!");
+      } else if (About === "") {
+        console.log("Please fill the required fields!");
+      } else {
+        const newFields = {
+          name: Name,
+          email: Email,
+          mobile: Mobile,
+          CoverURL: imagePreview,
+          description: About,
+        };
+        await updateDoc(trainerDoc, newFields).then(navigate("/"));
+      }
+    } else if (selected !== "" && imagePreview === null) {
+      console.log("Something wrong with the image preview");
+    } else {
+      //handle image upload and then update the document
+      const imageRef = ref(storage, `TrainerProfile/${selected.name}`);
+      if (selected === "") {
+        console.log("Cover image must be added!");
+      } else {
+        uploadBytes(imageRef, selected).then(() => {
+          getDownloadURL(imageRef).then((url) => {
+            if (Name === "") {
+              console.log("Fill the required fields!");
+            } else if (url === "") {
+              console.log("Cover URL Error!");
+            } else if (Email === "") {
+              console.log("Fill the required fields!");
+            } else if (Mobile === "") {
+              console.log("Please select an album category!");
+            } else if (About === "") {
+              console.log("Fill the required fields!");
+            } else {
+              const newFields = {
+                name: Name,
+                email: Email,
+                mobile: Mobile,
+                picture: url,
+                description: About,
+              };
+              updateDoc(trainerDoc, newFields).then(navigate("/"));
+            }
+          });
+        });
+      }
+    }
+  };
 
   const handleImageChange = (e) => {
     const selected = e.target.files[0];
@@ -117,6 +202,9 @@ const ProfileEdit = () => {
                   id="outlined-basic"
                   label="Name"
                   variant="outlined"
+                  value={Name}
+                  InputLabelProps={{ shrink: true }}
+                  onChange={(e) => setName(e.target.value)}
                 />
                 <Box sx={{ display: "flex", gap: 2, width: "100%" }}>
                   <TextField
@@ -124,12 +212,18 @@ const ProfileEdit = () => {
                     id="outlined-basic"
                     label="Email"
                     variant="outlined"
+                    value={Email}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                   <TextField
                     sx={{ width: "100%", marginTop: "3rem" }}
                     id="outlined-basic"
                     label="Mobile"
                     variant="outlined"
+                    value={"0" + Mobile}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => setMobile(e.target.value)}
                   />
                 </Box>
                 <TextField
@@ -138,6 +232,9 @@ const ProfileEdit = () => {
                   label="About"
                   multiline
                   rows={5}
+                  value={About}
+                  InputLabelProps={{ shrink: true }}
+                  onChange={(e) => setAbout(e.target.value)}
                 />
                 <Button
                   sx={{
@@ -147,6 +244,7 @@ const ProfileEdit = () => {
                     marginTop: "3rem",
                   }}
                   variant="contained"
+                  onClick={updateProfile}
                 >
                   update
                 </Button>

@@ -2,21 +2,9 @@ import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import AppBarTrainer from "../../../components/Trainer/AppBarTrainer";
 import { db } from "../../../firebase-config";
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  updateDoc,
-} from "firebase/firestore";
-import { async } from "@firebase/util";
+import { doc, getDoc } from "firebase/firestore";
 
 const Profile = () => {
-  const [selected, setSelected] = useState([]);
-  const [imagePreview, setImagePreview] = useState(null);
-
   const [Name, setName] = useState();
   const [Email, setEmail] = useState();
   const [Mobile, setMobile] = useState();
