@@ -2,25 +2,33 @@ import { Close } from "@mui/icons-material";
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import AppBarTrainer from "../../../components/Trainer/AppBarTrainer";
+import picture from "../../../images/personalTraining.webp";
+import { db } from "../../../firebase-config";
+import { addDoc, collection } from "firebase/firestore";
 
 const Createpackage = () => {
   const [selected, setSelected] = useState([]);
-  const [imagePreview, setImagePreview] = useState(null);
 
-  const handleImageChange = (e) => {
-    const selected = e.target.files[0];
-    setSelected(selected);
-    const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/jpg"];
-    if (selected && ALLOWED_TYPES.includes(selected.type)) {
-      let reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(selected);
-    } else {
-      console.log("File type is not supported!");
-    }
+  const imagePreview = picture;
+  const TrainerId = "5qO5w7dwRvzo3YeCoppe";
+
+  const [Package, setPackage] = useState();
+  const [Duration, setDuration] = useState();
+  const [Price, setPrice] = useState();
+  const [Description, setDescription] = useState();
+
+  const packageCollectionRef = collection(db, "packages");
+
+  const createPackage = async () => {
+    await addDoc(packageCollectionRef, {
+      trainerId: TrainerId,
+      name: Package,
+      duration: Duration,
+      price: Price,
+      description: Description,
+    });
   };
+
   return (
     <Box sx={{ height: "100vh" }}>
       <AppBarTrainer trainerName="Hi, Randy!" />
@@ -71,33 +79,10 @@ const Createpackage = () => {
                     marginTop: "4rem",
                     marginBottom: "1rem",
                     background: imagePreview
-                      ? `url("${imagePreview}")no-repeat center/cover`
+                      ? `url("${imagePreview}")no-repeat right/cover`
                       : "#D9D9D9",
                   }}
-                >
-                  {!imagePreview && (
-                    <>
-                      <label htmlFor="fileUpload">Choose Cover</label>
-                      <input
-                        type="file"
-                        id="fileUpload"
-                        onChange={handleImageChange}
-                        style={{ display: "none" }}
-                      />
-                    </>
-                  )}
-                </Box>
-                {imagePreview && (
-                  <>
-                    <Close
-                      sx={{ cursor: "pointer" }}
-                      onClick={() => {
-                        setImagePreview(null);
-                        setSelected("");
-                      }}
-                    />
-                  </>
-                )}
+                ></Box>
               </Grid>
 
               <Grid
@@ -117,6 +102,7 @@ const Createpackage = () => {
                   id="outlined-basic"
                   label="Package"
                   variant="outlined"
+                  onChange={(e) => setPackage(e.target.value)}
                 />
                 <Box sx={{ display: "flex", gap: 2, width: "100%" }}>
                   <TextField
@@ -124,6 +110,7 @@ const Createpackage = () => {
                     id="outlined-basic"
                     label="Duration"
                     variant="outlined"
+                    onChange={(e) => setDuration(e.target.value)}
                   />
                   <TextField
                     sx={{ width: "100%", marginTop: "3rem" }}
@@ -131,6 +118,7 @@ const Createpackage = () => {
                     label="Price"
                     variant="outlined"
                     type="number"
+                    onChange={(e) => setPrice(parseFloat(e.target.value))}
                   />
                 </Box>
                 <TextField
@@ -139,6 +127,7 @@ const Createpackage = () => {
                   label="Description"
                   multiline
                   rows={5}
+                  onChange={(e) => setDescription(e.target.value)}
                 />
                 <Button
                   sx={{
@@ -148,6 +137,7 @@ const Createpackage = () => {
                     marginTop: "3rem",
                   }}
                   variant="contained"
+                  onClick={createPackage}
                 >
                   create
                 </Button>
