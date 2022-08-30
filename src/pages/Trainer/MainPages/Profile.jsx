@@ -1,10 +1,39 @@
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AppBarTrainer from "../../../components/Trainer/AppBarTrainer";
+import { db } from "../../../firebase-config";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
+import { async } from "@firebase/util";
 
 const Profile = () => {
   const [selected, setSelected] = useState([]);
   const [imagePreview, setImagePreview] = useState(null);
+
+  const [Name, setName] = useState();
+  const [Email, setEmail] = useState();
+  const [Mobile, setMobile] = useState();
+  const [About, setAbout] = useState();
+  const [ImageUrl, setImageUrl] = useState();
+
+  const trainerRef = doc(db, "users", "5qO5w7dwRvzo3YeCoppe");
+
+  useEffect(() => {
+    getDoc(trainerRef).then((doc) => {
+      setName(doc.data().name);
+      setEmail(doc.data().email);
+      setMobile(doc.data().mobile);
+      setAbout(doc.data().description);
+      setImageUrl(doc.data().picture);
+    });
+  }, []);
 
   return (
     <Box sx={{ height: "100vh" }}>
@@ -55,8 +84,8 @@ const Profile = () => {
                     justifyContent: "center",
                     marginTop: "4rem",
                     marginBottom: "1rem",
-                    background: imagePreview
-                      ? `url("${imagePreview}")no-repeat center/cover`
+                    background: ImageUrl
+                      ? `url("${ImageUrl}")no-repeat center/cover`
                       : "#D9D9D9",
                   }}
                 ></Box>
@@ -79,6 +108,8 @@ const Profile = () => {
                   id="outlined-basic"
                   label="Name"
                   variant="outlined"
+                  value={Name}
+                  InputLabelProps={{ shrink: true }}
                   InputProps={{
                     readOnly: true,
                   }}
@@ -89,6 +120,8 @@ const Profile = () => {
                     id="outlined-basic"
                     label="Email"
                     variant="outlined"
+                    value={Email}
+                    InputLabelProps={{ shrink: true }}
                     InputProps={{
                       readOnly: true,
                     }}
@@ -98,6 +131,8 @@ const Profile = () => {
                     id="outlined-basic"
                     label="Mobile"
                     variant="outlined"
+                    InputLabelProps={{ shrink: true }}
+                    value={"0" + Mobile}
                     InputProps={{
                       readOnly: true,
                     }}
@@ -109,6 +144,8 @@ const Profile = () => {
                   label="About"
                   multiline
                   rows={5}
+                  value={About}
+                  InputLabelProps={{ shrink: true }}
                   InputProps={{
                     readOnly: true,
                   }}
