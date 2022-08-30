@@ -7,8 +7,6 @@ import { db } from "../../../firebase-config";
 import { addDoc, collection } from "firebase/firestore";
 
 const Createpackage = () => {
-  const [selected, setSelected] = useState([]);
-
   const imagePreview = picture;
   const TrainerId = "5qO5w7dwRvzo3YeCoppe";
 
