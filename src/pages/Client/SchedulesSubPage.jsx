@@ -12,22 +12,30 @@ import {
   Typography,
 } from "@mui/material";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../../firebase-config";
+const schedulesCollectionRef = collection(db, "shedules");
 
 function SchedulesSubPage() {
-  function createData(sheduleID, name, date) {
-    return { sheduleID, name, date };
-  }
+  const [schedules, setSchedules] = useState([]);
 
-  const rows = [
-    createData(11223, "Jhon Goldern", "2022/12/06"),
-    createData(11223, "Jhon Goldern", "2022/12/06"),
-    createData(11223, "Jhon Goldern", "2022/12/06"),
-    createData(11223, "Jhon Goldern", "2022/12/06"),
-    createData(11223, "Jhon Goldern", "2022/12/06"),
-    createData(11223, "Jhon Goldern", "2022/12/06"),
-    createData(11223, "Jhon Goldern", "2022/12/06"),
-  ];
+  useEffect(() => {
+    const getSchedules = async () => {
+      const filterdData = query(
+        schedulesCollectionRef,
+        where("clientID", "==", "bVeT0xDbbWyyKJSLFYdH")
+      );
+      const querySnapshot = await getDocs(filterdData);
+      setSchedules(
+        querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+      );
+    };
+    getSchedules();
+  }, []);
+
+  console.log("See this", schedules);
+
   return (
     <Box
       p={0}
@@ -100,7 +108,7 @@ function SchedulesSubPage() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {rows.map((row) => (
+                      {schedules.map((row) => (
                         <TableRow
                           key={row.name}
                           sx={{
@@ -115,9 +123,9 @@ function SchedulesSubPage() {
                           }}
                         >
                           <TableCell component="th" scope="row">
-                            {row.sheduleID}
+                            {row.scheduleID}
                           </TableCell>
-                          <TableCell align="right">{row.name}</TableCell>
+                          <TableCell align="right">{row.trainerName}</TableCell>
                           <TableCell align="right">{row.date}</TableCell>
                           <TableCell align="right">
                             <IconButton sx={{ color: "#3C56F5" }}>
@@ -186,7 +194,7 @@ function SchedulesSubPage() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {rows.map((row) => (
+                      {schedules.map((row) => (
                         <TableRow
                           key={row.name}
                           sx={{
@@ -201,9 +209,9 @@ function SchedulesSubPage() {
                           }}
                         >
                           <TableCell component="th" scope="row">
-                            {row.sheduleID}
+                            {row.scheduleID}
                           </TableCell>
-                          <TableCell align="right">{row.name}</TableCell>
+                          <TableCell align="right">{row.trainerName}</TableCell>
                           <TableCell align="right">{row.date}</TableCell>
                           <TableCell align="right">
                             <IconButton sx={{ color: "#3C56F5" }}>

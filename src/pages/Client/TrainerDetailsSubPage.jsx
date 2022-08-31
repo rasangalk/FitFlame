@@ -1,6 +1,9 @@
 import {
   Box,
   Button,
+  Card,
+  CardActions,
+  CardContent,
   Grid,
   Paper,
   Table,
@@ -11,10 +14,18 @@ import {
   TableRow,
   TextField,
 } from "@mui/material";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { db } from "../../firebase-config";
+const usersCollectionRef = collection(db, "packages");
 
 function createData(name, age, mobile, email) {
   return { name, age, mobile, email };
@@ -24,6 +35,7 @@ function TrainerDetailsSubPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const trainerId = location.state.id;
+  const [packages, setPackages] = useState([]);
 
   const [data, setData] = useState("");
 
@@ -34,6 +46,18 @@ function TrainerDetailsSubPage() {
       setData(docSnap.data());
     }
     fetchData();
+
+    const getPackages = async () => {
+      const filterdData = query(
+        usersCollectionRef,
+        where("trainerId", "==", `${trainerId}`)
+      );
+      const querySnapshot = await getDocs(filterdData);
+      setPackages(
+        querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+      );
+    };
+    getPackages();
   }, []);
 
   const rows = [createData(data.name, data.age, data.mobile, data.email)];
@@ -96,52 +120,90 @@ function TrainerDetailsSubPage() {
               sx={{ width: "100%" }}
               multiline
               aria-readonly
-              maxRows={8}
+              rows={3}
               value={data.description}
               inputProps={{ readOnly: true }}
               InputLabelProps={{ shrink: true }}
             />
           </Box>
-          <Box sx={{ marginTop: "20px" }}>
-            <TextField
-              id="outlined-multiline-flexible"
-              label="Packages"
-              sx={{ width: "100%" }}
-              multiline
-              aria-readonly
-              maxRows={10}
-              value={data.packages}
-              inputProps={{ readOnly: true }}
-              InputLabelProps={{ shrink: true }}
-            />
+          <Box sx={{ marginTop: "20px", display: "flex" }}>
+            {packages.map((row) => (
+              <Card sx={{ minWidth: 275, marginRight: 1 }}>
+                <CardContent>
+                  <Grid container spacing={1.5}>
+                    <Grid item xs={12}>
+                      <TextField
+                        id="outlined-multiline-flexible"
+                        label="Package Name"
+                        size="small"
+                        sx={{ width: "100%" }}
+                        value={row.name}
+                        inputProps={{ readOnly: true }}
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        id="outlined-multiline-flexible"
+                        label="Description"
+                        sx={{ width: "100%" }}
+                        multiline
+                        rows={4}
+                        value={row.description}
+                        size="small"
+                        inputProps={{ readOnly: true }}
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    </Grid>
+                    <Grid item container spacing={1}>
+                      <Grid item xs={6}>
+                        <TextField
+                          id="outlined-multiline-flexible"
+                          label="Duration"
+                          size="small"
+                          sx={{ width: "100%" }}
+                          value={row.duration}
+                          inputProps={{ readOnly: true }}
+                          InputLabelProps={{ shrink: true }}
+                        />
+                      </Grid>
+                      <Grid item xs={6}>
+                        <TextField
+                          id="outlined-multiline-flexible"
+                          label="Price"
+                          size="small"
+                          sx={{ width: "100%" }}
+                          value={row.price}
+                          inputProps={{ readOnly: true }}
+                          InputLabelProps={{ shrink: true }}
+                        />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+                <CardActions>
+                  <Button
+                    variant="contained"
+                    sx={{ background: "#3C56F5", marginLeft: 1 }}
+                    size="small"
+                    onClick={() => {
+                      navigate("/make-order", {
+                        state: {
+                          id: trainerId,
+                          name: data.name,
+                          mobile: data.mobile,
+                          email: data.email,
+                          programme: row.name,
+                        },
+                      });
+                    }}
+                  >
+                    Continue
+                  </Button>
+                </CardActions>
+              </Card>
+            ))}
           </Box>
-        </Box>
-        <Box sx={{ padding: 4, position: "absolute", bottom: 0 }}>
-          <Grid container spacing={1}>
-            <Grid item>
-              <Button variant="contained" sx={{ background: "#2A3036" }}>
-                Cancel
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                sx={{ background: "#3C56F5" }}
-                onClick={() => {
-                  navigate("/make-order", {
-                    state: {
-                      id: trainerId,
-                      name: data.name,
-                      mobile: data.mobile,
-                      email: data.email,
-                    },
-                  });
-                }}
-              >
-                Make Order
-              </Button>
-            </Grid>
-          </Grid>
         </Box>
       </Box>
     </Box>

@@ -1,23 +1,135 @@
 import {
   Box,
   Button,
+  CardMedia,
   FormControl,
   Grid,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
   TextField,
+  Tooltip,
+  Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  deleteObject,
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { db } from "../../firebase-config";
+import ClearIcon from "@mui/icons-material/Clear";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import { v4 } from "uuid";
 
 function UpdateOrderSubPage() {
-  const [age, setAge] = useState("");
-  const [description, setDescription] = useState();
-  const [files, setFiles] = useState([]);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const orderId = location.state.orderId;
+  const trainerName = location.state.trainerName;
+  const trainerEmail = location.state.email;
+  const orderDoc = doc(db, "orders", orderId);
+  const [data, setData] = useState("");
+  const [url, setURL] = useState("");
 
-  const handleChange = (event) => {
-    setAge(event.target.value);
+  const [weight, setWeight] = useState();
+  const [height, setHeight] = useState();
+  const [goal, setGoal] = useState();
+  const [programme, setProgramme] = useState();
+  const [description, setDescription] = useState();
+  const [checkImage, setCheckImage] = useState("");
+  const [imageUpload, setImageUpload] = useState(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      const userDoc = doc(db, "orders", orderId);
+      const docSnap = await getDoc(userDoc);
+      setData(docSnap.data());
+    }
+    fetchData();
+    setWeight(data.weight);
+    setHeight(data.height);
+    setGoal(data.goal);
+    setProgramme(data.programme);
+    setDescription(data.description);
+    setCheckImage(data.image);
+  }, [
+    data.height,
+    data.weight,
+    data.goal,
+    data.programme,
+    data.description,
+    data.image,
+    orderId,
+  ]);
+
+  const storage = getStorage();
+
+  if (checkImage !== null) {
+    const imageRef = ref(storage, `images/${checkImage}`);
+    getDownloadURL(imageRef)
+      .then((url) => {
+        setURL(url);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  }
+
+  const updateOrder = async () => {
+    if (data.image === null) {
+      const IName = imageUpload.name + v4();
+      if (imageUpload == null) {
+        alert("No data");
+        return;
+      }
+      const imageRef = ref(storage, `images/${IName}`);
+      await uploadBytes(imageRef, imageUpload);
+      await updateDoc(orderDoc, {
+        weight: weight,
+        height: height,
+        description: description,
+        programme: programme,
+        goal: goal,
+        image: `${IName}`,
+      });
+    } else {
+      await updateDoc(orderDoc, {
+        weight: weight,
+        height: height,
+        description: description,
+        programme: programme,
+        goal: goal,
+      });
+    }
+
+    navigate("/orders");
   };
+
+  //Delete image for update
+  const deleteImage = async () => {
+    const storage = getStorage();
+    const imageRef = ref(storage, `images/${checkImage}`);
+    // Delete the file
+    deleteObject(imageRef)
+      .then(
+        await updateDoc(orderDoc, {
+          image: null,
+        })
+      )
+      .then(setCheckImage(null))
+      .catch((error) => {
+        // Uh-oh, an error occurred!
+      });
+  };
+
+  console.log("MEka balapan", checkImage);
+
   return (
     <Box
       p={0}
@@ -41,20 +153,22 @@ function UpdateOrderSubPage() {
             <Grid container spacing={3}>
               <Grid item xs={6}>
                 <TextField
-                  id="outlined-basic"
-                  label="weight(kg)"
-                  defaultValue="46"
-                  variant="outlined"
+                  id="outlined-multiline-flexible"
+                  label="Trainer Name"
                   sx={{ width: "100%" }}
+                  value={trainerName}
+                  inputProps={{ readOnly: true }}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
               <Grid item xs={6}>
                 <TextField
-                  id="outlined-basic"
-                  label="height(cm)"
-                  defaultValue="146"
-                  variant="outlined"
+                  id="outlined-multiline-flexible"
+                  label="Email"
                   sx={{ width: "100%" }}
+                  value={trainerEmail}
+                  inputProps={{ readOnly: true }}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
             </Grid>
@@ -63,30 +177,56 @@ function UpdateOrderSubPage() {
             <Grid container spacing={3}>
               <Grid item xs={6}>
                 <TextField
-                  id="outlined-basic"
-                  label="goal"
-                  variant="outlined"
-                  defaultValue="weight loss"
+                  id="outlined-multiline-flexible"
+                  label="Weight(kg)"
                   sx={{ width: "100%" }}
+                  value={weight}
+                  onChange={(e) => {
+                    setWeight(e.target.value);
+                  }}
+                  type="number"
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
               <Grid item xs={6}>
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">
-                    programme
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={10}
-                    label="Age"
-                    onChange={handleChange}
-                  >
-                    <MenuItem value={10}>programme 1</MenuItem>
-                    <MenuItem value={20}>programme 2</MenuItem>
-                    <MenuItem value={30}>programme 3</MenuItem>
-                  </Select>
-                </FormControl>
+                <TextField
+                  id="outlined-multiline-flexible"
+                  label="Height(cm)"
+                  sx={{ width: "100%" }}
+                  value={height}
+                  type="number"
+                  InputLabelProps={{ shrink: true }}
+                  onChange={(e) => {
+                    setHeight(e.target.value);
+                  }}
+                />
+              </Grid>
+            </Grid>
+          </Box>
+          <Box sx={{ marginTop: "15px" }}>
+            <Grid container spacing={3}>
+              <Grid item xs={6}>
+                <TextField
+                  id="outlined-multiline-flexible"
+                  label="Goal"
+                  sx={{ width: "100%" }}
+                  value={goal}
+                  // inputProps={{ readOnly: true }}
+                  InputLabelProps={{ shrink: true }}
+                  onChange={(e) => {
+                    setGoal(e.target.value);
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  id="outlined-multiline-flexible"
+                  label="Programme"
+                  sx={{ width: "100%" }}
+                  value={programme}
+                  inputProps={{ readOnly: true }}
+                  InputLabelProps={{ shrink: true }}
+                />
               </Grid>
             </Grid>
           </Box>
@@ -95,12 +235,67 @@ function UpdateOrderSubPage() {
               id="outlined-multiline-flexible"
               label="Description"
               sx={{ width: "100%" }}
-              defaultValue="Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta facere magnam, deserunt consequatur voluptatum maxime, possimus officia quaerat maiores dolores nemo quis numquam sed cumque tempora ex aliquam amet perferendis!Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta facere magnam, deserunt consequatur voluptatum maxime, possimus officia quaerat maiores dolores nemo quis numquam sed cumque tempora ex aliquam amet perferendis!"
               multiline
               maxRows={4}
               value={description}
+              // inputProps={{ readOnly: true }}
+              InputLabelProps={{ shrink: true }}
+              onChange={(e) => {
+                setDescription(e.target.value);
+              }}
             />
           </Box>
+          {checkImage !== null ? (
+            <Box sx={{ marginTop: "15px" }}>
+              <Grid container>
+                <Grid item>
+                  <CardMedia
+                    component="img"
+                    height="170px"
+                    sx={{ width: "140px", borderRadius: 3 }}
+                    image={url}
+                    alt="GYM TRAINER"
+                  />
+                </Grid>
+                <Grid item>
+                  <Tooltip title="Delete Image">
+                    <IconButton sx={{ color: "#2A3036" }} onClick={deleteImage}>
+                      <ClearIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+              </Grid>
+            </Box>
+          ) : (
+            <Box sx={{ position: "absolute" }}>
+              <Grid container spacing={0.3}>
+                <Grid item>
+                  <ErrorOutlineIcon
+                    sx={{ fontSize: "14px", marginTop: "6px" }}
+                  />
+                </Grid>
+                <Grid item>
+                  <Typography variant="h7" sx={{ fontSize: "11px" }}>
+                    Upload some of your recent images
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Button
+                variant="outlined"
+                component="label"
+                sx={{ border: "1px solid #ccc!important", color: "#2A3036" }}
+              >
+                <input
+                  accept="image/*"
+                  onChange={(e) => {
+                    setImageUpload(e.target.files[0]);
+                  }}
+                  multiple
+                  type="file"
+                />
+              </Button>
+            </Box>
+          )}
         </Box>
         <Box sx={{ padding: 4, position: "absolute", bottom: 0 }}>
           <Grid container spacing={1}>
@@ -114,7 +309,7 @@ function UpdateOrderSubPage() {
                 variant="contained"
                 sx={{ background: "#3C56F5" }}
                 onClick={() => {
-                  // navigate("/make-order");
+                  updateOrder();
                 }}
               >
                 Update

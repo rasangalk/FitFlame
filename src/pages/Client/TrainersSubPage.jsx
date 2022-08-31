@@ -1,5 +1,6 @@
 import {
   Autocomplete,
+  Button,
   Card,
   CardContent,
   CardMedia,
@@ -18,23 +19,28 @@ const usersCollectionRef = collection(db, "users");
 function TrainersSubPage() {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
-  const [value, setValue] = React.useState(4);
+  const [search, setSearch] = useState(null);
+  const [value, setValue] = useState(4);
 
   useEffect(() => {
-    const getUsers = async () => {
-      const data = await getDocs(usersCollectionRef);
-      setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    };
-    getUsers();
+    if (search === null || search === "") {
+      const getUsers = async () => {
+        const data = await getDocs(usersCollectionRef);
+        setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      };
+      getUsers();
+    }
+    searchTrainer();
+  }, [search]);
+  console.log("This is search", search);
 
-    // listAll(imageListRef).then((res) => {
-    //   res.items.forEach((item) => {
-    //     getDownloadURL(item).then((url) => {
-    //       setImgList((prev) => [...prev, { url: url, ref: item }]);
-    //     });
-    //   });
-    // });
-  }, []);
+  const searchTrainer = () => {
+    const filtered = users.filter((user) =>
+      user.name.toLowerCase().includes(search.toLowerCase())
+    );
+    setUsers(filtered);
+    console.log("Element is ", filtered);
+  };
 
   return (
     <Box
@@ -55,7 +61,7 @@ function TrainersSubPage() {
       >
         <Grid container>
           <Grid item xs={12} container justifyContent="flex-end">
-            <Autocomplete
+            {/* <Autocomplete
               freeSolo
               id="free-solo-2-demo"
               disableClearable
@@ -71,13 +77,43 @@ function TrainersSubPage() {
                   {...params}
                   size="small"
                   label="Search Trainer..."
-                  InputProps={{
-                    ...params.InputProps,
-                    type: "search",
-                  }}
+                  // InputProps={{
+                  //   ...params.InputProps,
+                  //   type: "search",
+                  // }}
                 />
               )}
+            /> */}
+            <TextField
+              id="outlined-basic"
+              size="small"
+              sx={{
+                width: "400px",
+                marginBottom: "10px",
+                paddingTop: "20px",
+                marginRight: "5px",
+              }}
+              value={search}
+              variant="outlined"
+              placeholder="Search Trainer..."
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
             />
+            <Button
+              variant="contained"
+              sx={{
+                background: "#3C56F5",
+                height: 36.5,
+                marginTop: 2.7,
+                width: "auto",
+              }}
+              onClick={() => {
+                setSearch("");
+              }}
+            >
+              clear
+            </Button>
           </Grid>
           <Grid item xs={12}>
             <Box
@@ -133,7 +169,7 @@ function TrainersSubPage() {
                             component="img"
                             height="320px"
                             width="400px"
-                            image="https://www.superprof.com/images/teachers/teacher-home-personal-training-amp-nutrition-planning-darmstadt-and-the-surrounding-area-licensed-personal-trainer-fitness-trainer.jpg"
+                            image={user.picture}
                             alt="GYM TRAINER"
                           />
                         </Grid>

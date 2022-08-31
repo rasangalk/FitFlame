@@ -1,18 +1,11 @@
+import { Box, Button, CardMedia, Grid, TextField } from "@mui/material";
+import { deleteDoc, doc, getDoc } from "firebase/firestore";
 import {
-  Box,
-  Button,
-  Card,
-  CardMedia,
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { doc, getDoc } from "firebase/firestore";
-import { getDownloadURL, getStorage, ref } from "firebase/storage";
+  deleteObject,
+  getDownloadURL,
+  getStorage,
+  ref,
+} from "firebase/storage";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { db } from "../../firebase-config";
@@ -35,43 +28,29 @@ function ViewOrderSubPage() {
     fetchData();
   }, []);
 
-  console.log("This is OrderID", orderId);
-  console.log("This is Data", data);
-  // const [weight, setWeight] = useState("46");
-  // const [height, setHeight] = useState("134");
-  // const [goal, setGoal] = useState("weight loss");
-  // const [programme, setProgramme] = useState("3 months");
-  // const [description, setDescription] = React.useState(
-  //   "Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta facere magnam, deserunt consequatur voluptatum maxime, possimus officia quaerat maiores dolores nemo quis numquam sed cumque tempora ex aliquam amet perferendis!Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta facere magnam, deserunt consequatur voluptatum maxime, possimus officia quaerat maiores dolores nemo quis numquam sed cumque tempora ex aliquam amet perferendis!"
-  // );
-
   const storage = getStorage();
-  const desertRef = ref(storage, `images/${data.image}`);
-  getDownloadURL(desertRef)
+  const imageRef = ref(storage, `images/${data.image}`);
+  getDownloadURL(imageRef)
     .then((url) => {
       setURL(url);
     })
     .catch((error) => {
-      // A full list of error codes is available at
-      // https://firebase.google.com/docs/storage/web/handle-errors
-      switch (error.code) {
-        case "storage/object-not-found":
-          // File doesn't exist
-          break;
-        case "storage/unauthorized":
-          // User doesn't have permission to access the object
-          break;
-        case "storage/canceled":
-          // User canceled the upload
-          break;
-
-        // ...
-
-        case "storage/unknown":
-          // Unknown error occurred, inspect the server response
-          break;
-      }
+      console.log("error", error);
     });
+
+  //Delete the order if not proceeded
+  const deleteOrder = async (id) => {
+    const userDoc = doc(db, "orders", id);
+    await deleteDoc(userDoc);
+
+    const storage = getStorage();
+    const imageRef = ref(storage, `images/${data.image}`);
+    // Delete the file
+    deleteObject(imageRef).catch((error) => {
+      // Uh-oh, an error occurred!
+    });
+    navigate("/orders");
+  };
 
   return (
     <Box
@@ -170,7 +149,7 @@ function ViewOrderSubPage() {
               label="Description"
               sx={{ width: "100%" }}
               multiline
-              maxRows={4}
+              rows={3}
               value={data.description}
               inputProps={{ readOnly: true }}
               InputLabelProps={{ shrink: true }}
@@ -186,26 +165,40 @@ function ViewOrderSubPage() {
             />
           </Box>
         </Box>
-        <Box sx={{ padding: 4, position: "absolute", bottom: 0 }}>
-          <Grid container spacing={1}>
-            <Grid item>
-              <Button variant="contained" sx={{ background: "#2A3036" }}>
-                Cancel
-              </Button>
+        {data.status === "proceed" ? null : (
+          <Box sx={{ padding: 4, position: "absolute", bottom: 0 }}>
+            <Grid container spacing={1}>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  sx={{ background: "#2A3036" }}
+                  onClick={() => {
+                    deleteOrder(orderId);
+                  }}
+                >
+                  Delete
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  sx={{ background: "#3C56F5" }}
+                  onClick={() => {
+                    navigate("/update-order", {
+                      state: {
+                        orderId: orderId,
+                        trainerName: trainerName,
+                        email: trainerEmail,
+                      },
+                    });
+                  }}
+                >
+                  Update
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                sx={{ background: "#3C56F5" }}
-                onClick={() => {
-                  navigate("/update-order");
-                }}
-              >
-                Update
-              </Button>
-            </Grid>
-          </Grid>
-        </Box>
+          </Box>
+        )}
       </Box>
     </Box>
   );

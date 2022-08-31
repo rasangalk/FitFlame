@@ -12,6 +12,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { db } from "../../firebase-config";
 import { collection, getDocs, query, where } from "firebase/firestore";
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlineRounded";
 const usersCollectionRef = collection(db, "orders");
 
 function OrdersSubPage() {
@@ -84,6 +86,7 @@ function OrdersSubPage() {
                     <TableCell align="right">Phone</TableCell>
                     <TableCell align="right">Email</TableCell>
                     <TableCell align="right">Date</TableCell>
+                    <TableCell align="right">Status</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -111,6 +114,13 @@ function OrdersSubPage() {
                       <TableCell align="right">{row.trainerMobile}</TableCell>
                       <TableCell align="right">{row.trainerEmail}</TableCell>
                       <TableCell align="right">{row.date}</TableCell>
+                      <TableCell align="right">
+                        {row.status === "pending" ? (
+                          <CheckCircleOutlineRoundedIcon />
+                        ) : (
+                          <CheckCircleRoundedIcon />
+                        )}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
