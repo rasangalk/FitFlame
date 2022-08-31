@@ -30,12 +30,13 @@ function MakeOrderSubPage() {
   const trainerName = location.state.name;
   const trainerMobile = location.state.mobile;
   const trainerEmail = location.state.email;
+  const selectedProgramme = location.state.programme;
   const [data, setData] = useState("");
 
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [goal, setGoal] = useState("");
-  const [programme, setProgramme] = useState("");
+  // const [programme, setProgramme] = useState("");
   const [description, setDescription] = useState();
   const [imageUpload, setImageUpload] = useState(null);
 
@@ -48,7 +49,7 @@ function MakeOrderSubPage() {
       height: Number(height),
       goal: goal,
       description: description,
-      programme: programme,
+      programme: selectedProgramme,
       image: `${IName}`,
       trainerName: trainerName,
       trainerMobile: trainerMobile,
@@ -56,6 +57,7 @@ function MakeOrderSubPage() {
       trainerId: trainerId,
       date: currentDate,
       clientId: userId,
+      status: "pending",
       orderId: Math.floor(1000 + Math.random() * 9000),
     });
 
@@ -178,24 +180,19 @@ function MakeOrderSubPage() {
                 />
               </Grid>
               <Grid item xs={6}>
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">
-                    programme
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={programme}
-                    label="Age"
-                    onChange={(e) => {
-                      setProgramme(e.target.value);
-                    }}
-                  >
-                    <MenuItem value={"Programme1"}>programme 1</MenuItem>
-                    <MenuItem value={"Programme2"}>programme 2</MenuItem>
-                    <MenuItem value={"Programme3"}>programme 3</MenuItem>
-                  </Select>
-                </FormControl>
+                <TextField
+                  required
+                  id="outlined-basic"
+                  label="programme"
+                  variant="outlined"
+                  sx={{ width: "100%" }}
+                  value={selectedProgramme}
+                  inputProps={{ readOnly: true }}
+                  InputLabelProps={{ shrink: true }}
+                  onChange={(e) => {
+                    setGoal(e.target.value);
+                  }}
+                />
               </Grid>
             </Grid>
           </Box>
@@ -205,7 +202,7 @@ function MakeOrderSubPage() {
               label="Description"
               sx={{ width: "100%" }}
               multiline
-              maxRows={4}
+              rows={4}
               size="lg"
               onChange={(e) => {
                 setDescription(e.target.value);
