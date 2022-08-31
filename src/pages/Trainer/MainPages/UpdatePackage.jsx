@@ -1,26 +1,53 @@
 import { Close } from "@mui/icons-material";
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import AppBarTrainer from "../../../components/Trainer/AppBarTrainer";
+import picture from "../../../images/personalTraining.webp";
+import { db } from "../../../firebase-config";
+import {
+  collection,
+  query,
+  where,
+  doc,
+  updateDoc,
+  getDocs,
+  deleteDoc,
+} from "firebase/firestore";
 
 const UpdatePackage = () => {
-  const [selected, setSelected] = useState([]);
-  const [imagePreview, setImagePreview] = useState(null);
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const handleImageChange = (e) => {
-    const selected = e.target.files[0];
-    setSelected(selected);
-    const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/jpg"];
-    if (selected && ALLOWED_TYPES.includes(selected.type)) {
-      let reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(selected);
-    } else {
-      console.log("File type is not supported!");
-    }
+  const name = location.state.name;
+  const duration = location.state.duration;
+  const price = location.state.price;
+  const description = location.state.description;
+  const id = location.state.id;
+
+  const imagePreview = picture;
+  const [Name, setName] = useState(name);
+  const [Duration, setDuration] = useState(duration);
+  const [Price, setPrice] = useState(price);
+  const [Description, setDescription] = useState(description);
+
+  const updatePackage = async () => {
+    // getting specific user document with user ID
+    const packageDoc = doc(db, "packages", id);
+    const newFields = {
+      name: Name,
+      duration: Duration,
+      price: Price,
+      description: Description,
+    };
+    await updateDoc(packageDoc, newFields).then(navigate("/trainer/packages"));
   };
+
+  const deletePackage = async () => {
+    const packageDoc = doc(db, "packages", id);
+    await deleteDoc(packageDoc).then(navigate("/trainer/packages"));
+  };
+
   return (
     <Box sx={{ height: "100vh" }}>
       <AppBarTrainer trainerName="Hi, Randy!" />
@@ -74,30 +101,7 @@ const UpdatePackage = () => {
                       ? `url("${imagePreview}")no-repeat center/cover`
                       : "#D9D9D9",
                   }}
-                >
-                  {!imagePreview && (
-                    <>
-                      <label htmlFor="fileUpload">Choose Cover</label>
-                      <input
-                        type="file"
-                        id="fileUpload"
-                        onChange={handleImageChange}
-                        style={{ display: "none" }}
-                      />
-                    </>
-                  )}
-                </Box>
-                {imagePreview && (
-                  <>
-                    <Close
-                      sx={{ cursor: "pointer" }}
-                      onClick={() => {
-                        setImagePreview(null);
-                        setSelected("");
-                      }}
-                    />
-                  </>
-                )}
+                ></Box>
               </Grid>
 
               <Grid
@@ -110,13 +114,16 @@ const UpdatePackage = () => {
                 }}
               >
                 <Typography variant="h4" sx={{ fontWeight: 500 }}>
-                  <span style={{ color: "#3C56F5" }}>Create</span> Package,
+                  <span style={{ color: "#3C56F5" }}>Edit</span> Package,
                 </Typography>
                 <TextField
                   sx={{ width: "100%", marginTop: "3rem" }}
                   id="outlined-basic"
                   label="Package"
                   variant="outlined"
+                  InputLabelProps={{ shrink: true }}
+                  value={Name}
+                  onChange={(e) => setName(e.target.value)}
                 />
                 <Box sx={{ display: "flex", gap: 2, width: "100%" }}>
                   <TextField
@@ -124,6 +131,9 @@ const UpdatePackage = () => {
                     id="outlined-basic"
                     label="Duration"
                     variant="outlined"
+                    InputLabelProps={{ shrink: true }}
+                    value={Duration}
+                    onChange={(e) => setDuration(e.target.value)}
                   />
                   <TextField
                     sx={{ width: "100%", marginTop: "3rem" }}
@@ -131,6 +141,9 @@ const UpdatePackage = () => {
                     label="Price"
                     variant="outlined"
                     type="number"
+                    InputLabelProps={{ shrink: true }}
+                    value={Price}
+                    onChange={(e) => setPrice(e.target.value.toString())}
                   />
                 </Box>
                 <TextField
@@ -139,6 +152,9 @@ const UpdatePackage = () => {
                   label="Description"
                   multiline
                   rows={5}
+                  InputLabelProps={{ shrink: true }}
+                  value={Description}
+                  onChange={(e) => setDescription(e.target.value)}
                 />
                 <Button
                   sx={{
@@ -148,6 +164,7 @@ const UpdatePackage = () => {
                     marginTop: "3rem",
                   }}
                   variant="contained"
+                  onClick={deletePackage}
                 >
                   delete
                 </Button>
@@ -159,6 +176,7 @@ const UpdatePackage = () => {
                     marginTop: "1rem",
                   }}
                   variant="contained"
+                  onClick={updatePackage}
                 >
                   update
                 </Button>

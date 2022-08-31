@@ -3,7 +3,7 @@ import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import AppBarTrainer from "../../../components/Trainer/AppBarTrainer";
 import { db } from "../../../firebase-config";
-import { collection, doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { storage } from "./../../../firebase-config";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 

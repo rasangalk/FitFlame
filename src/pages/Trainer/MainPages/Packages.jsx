@@ -1,9 +1,43 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AppBarTrainer from "../../../components/Trainer/AppBarTrainer";
 import { DataGrid } from "@mui/x-data-grid";
-import { Box, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { db } from "../../../firebase-config";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 const Packages = () => {
+  const navigate = useNavigate();
+  const packageRef = collection(db, "packages");
+  const [Packages, setPackages] = useState([]);
+  const q = query(packageRef, where("trainerId", "==", "5qO5w7dwRvzo3YeCoppe"));
+  const [rows, setrows] = useState([]);
+  useEffect(() => {
+    const getPackages = async () => {
+      const data = await getDocs(q);
+      setPackages(
+        data.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }))
+      );
+    };
+
+    getPackages();
+  }, [Packages]);
+
   const columns = [
     { field: "id", headerName: "ID", flex: 0.1 },
     { field: "program", headerName: "Program", flex: 0.3 },
@@ -17,54 +51,8 @@ const Packages = () => {
     },
   ];
 
-  const rows = [
-    {
-      id: 1,
-      program: "Cardio Mastery",
-      duration: "3 months",
-      price: "45,000 LKR",
-    },
-    {
-      id: 2,
-      program: "Cardio Mastery",
-      duration: "3 months",
-      price: "45,000 LKR",
-    },
-    {
-      id: 3,
-      program: "Cardio Mastery",
-      duration: "3 months",
-      price: "45,000 LKR",
-    },
-    {
-      id: 4,
-      program: "Cardio Mastery",
-      duration: "3 months",
-      price: "45,000 LKR",
-    },
-    {
-      id: 5,
-      program: "Cardio Mastery",
-      duration: "3 months",
-      price: "45,000 LKR",
-    },
-    {
-      id: 6,
-      program: "Cardio Mastery",
-      duration: "3 months",
-      price: "45,000 LKR",
-    },
-    {
-      id: 7,
-      program: "Cardio Mastery",
-      duration: "3 months",
-      price: "45,000 LKR",
-    },
-  ];
-
   return (
     <div>
-      {" "}
       <AppBarTrainer trainerName="Hi, Randy!"></AppBarTrainer>
       <Box sx={{ margin: "5rem 5rem 1rem" }}>
         <Box
@@ -72,6 +60,7 @@ const Packages = () => {
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-between",
+            alignItems: "baseline",
           }}
         >
           <Typography
@@ -80,20 +69,73 @@ const Packages = () => {
           >
             Packages
           </Typography>
-          <Button
-            variant="contained"
-            sx={{ height: "40px", width: "130px", backgroundColor: "#3C56F5" }}
-          >
-            add
-          </Button>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <TextField
+              id="outlined-basic"
+              label="Search"
+              variant="outlined"
+              InputLabelProps={{ shrink: true }}
+              size="small"
+            />
+            <Button
+              variant="contained"
+              sx={{
+                height: "40px",
+                width: "130px",
+                backgroundColor: "#3C56F5",
+              }}
+              onClick={() => navigate("/trainer/package-create")}
+            >
+              add
+            </Button>
+          </Box>
         </Box>
         <Box sx={{ height: 400, width: "100%" }}>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
-          />
+          <Paper sx={{ width: "100%", overflow: "hidden" }}>
+            <TableContainer component={Paper} sx={{ maxHeight: 440 }}>
+              <Table
+                sx={{ minWidth: 650 }}
+                stickyHeader
+                aria-label="sticky table"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell>ID</TableCell>
+                    <TableCell align="left">Program</TableCell>
+                    <TableCell align="left">Duration</TableCell>
+                    <TableCell align="left">Price&nbsp;(LKR)</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {Packages.map((row) => (
+                    <TableRow
+                      key={row.name}
+                      sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                        cursor: "pointer",
+                      }}
+                      onClick={() =>
+                        navigate("/trainer/package-edit", {
+                          state: {
+                            id: row.id,
+                            name: row.name,
+                            duration: row.duration,
+                            price: row.price,
+                            description: row.description,
+                          },
+                        })
+                      }
+                    >
+                      <TableCell align="left">{row.packageID}</TableCell>
+                      <TableCell align="left">{row.name}</TableCell>
+                      <TableCell align="left">{row.duration}</TableCell>
+                      <TableCell align="left">{row.price}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Paper>
         </Box>
       </Box>
     </div>

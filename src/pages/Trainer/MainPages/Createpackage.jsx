@@ -4,8 +4,10 @@ import AppBarTrainer from "../../../components/Trainer/AppBarTrainer";
 import picture from "../../../images/personalTraining.webp";
 import { db } from "../../../firebase-config";
 import { addDoc, collection } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 const Createpackage = () => {
+  const navigate = useNavigate();
   const imagePreview = picture;
   const TrainerId = "5qO5w7dwRvzo3YeCoppe";
 
@@ -13,8 +15,43 @@ const Createpackage = () => {
   const [Duration, setDuration] = useState();
   const [Price, setPrice] = useState();
   const [Description, setDescription] = useState();
-
   const packageCollectionRef = collection(db, "packages");
+
+  var today = new Date();
+  // returns year as YY
+  var year = today.getFullYear().toString();
+  // returns month
+  var month;
+  var month = parseInt(today.getMonth().toString());
+  month = month + 1;
+  month = month.toString();
+  if (month.length == 1) {
+    month = "0" + month;
+  }
+  // returns day
+  var day = today.getDate().toString();
+  if (day.length == 1) {
+    day = "0" + day;
+  }
+  // returns hours
+  var hours = today.getHours().toString();
+  if (hours.length == 1) {
+    hours = "0" + hours;
+  }
+  // returns minutes
+  var minutes = today.getMinutes().toString();
+  if (minutes.length == 1) {
+    minutes = "0" + minutes;
+  }
+  // returns seconds
+  var seconds = today.getSeconds().toString();
+  if (seconds.length == 1) {
+    seconds = "0" + seconds;
+  }
+  // returns formatted date
+  var formatedDate =
+    year.substr(2, 3) + month + day + "." + hours + minutes + seconds;
+  const packageId = parseFloat(formatedDate);
 
   const createPackage = async () => {
     await addDoc(packageCollectionRef, {
@@ -23,7 +60,8 @@ const Createpackage = () => {
       duration: Duration,
       price: Price,
       description: Description,
-    });
+      packageID: packageId,
+    }).then(navigate("/trainer/packages"));
   };
 
   return (
