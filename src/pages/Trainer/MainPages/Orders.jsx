@@ -1,66 +1,51 @@
-import React from "react";
-import { Box, Button, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material";
 import AppBarTrainer from "../../../components/Trainer/AppBarTrainer";
-import { DataGrid } from "@mui/x-data-grid";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../../../firebase-config";
+import { useNavigate } from "react-router-dom";
 
 const Orders = () => {
-  const columns = [
-    { field: "id", headerName: "ID", flex: 0.1 },
-    { field: "name", headerName: "Name", flex: 0.3 },
-    { field: "email", headerName: "Email", flex: 0.3 },
-    {
-      field: "phone",
-      headerName: "Phone",
-      flex: 0.2,
-      align: "left",
-      headerAlign: "left",
-    },
-  ];
+  const [Orders, setOrders] = useState([]);
+  const [ID, setID] = useState();
+  const [Name, setName] = useState();
+  const [Email, setEmail] = useState();
+  const [Phone, setPhone] = useState();
 
-  const rows = [
-    {
-      id: 1,
-      name: "Nimesha Chamod",
-      email: "chamod@gmail.com",
-      phone: "+94702343123",
-    },
-    {
-      id: 2,
-      name: "Nimesha Chamod",
-      email: "chamod@gmail.com",
-      phone: "+94702343123",
-    },
-    {
-      id: 3,
-      name: "Nimesha Chamod",
-      email: "chamod@gmail.com",
-      phone: "+94702343123",
-    },
-    {
-      id: 4,
-      name: "Nimesha Chamod",
-      email: "chamod@gmail.com",
-      phone: "+94702343123",
-    },
-    {
-      id: 5,
-      name: "Nimesha Chamod",
-      email: "chamod@gmail.com",
-      phone: "+94702343123",
-    },
-    {
-      id: 6,
-      name: "Nimesha Chamod",
-      email: "chamod@gmail.com",
-      phone: "+94702343123",
-    },
-    {
-      id: 7,
-      name: "Nimesha Chamod",
-      email: "chamod@gmail.com",
-      phone: "+94702343123",
-    },
-  ];
+  const navigate = useNavigate();
+
+  const orderRef = collection(db, "orders");
+  const q = query(
+    orderRef,
+    where("trainerId", "==", "5qO5w7dwRvzo3YeCoppe"),
+    where("status", "==", "pending")
+  );
+
+  useEffect(() => {
+    const getOrders = async () => {
+      const data = await getDocs(q);
+
+      setOrders(
+        data.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }))
+      );
+    };
+
+    getOrders();
+  }, []);
 
   return (
     <div>
@@ -81,12 +66,59 @@ const Orders = () => {
           </Typography>
         </Box>
         <Box sx={{ height: 400, width: "100%" }}>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
-          />
+          <Paper sx={{ width: "100%", overflow: "hidden" }}>
+            <TableContainer component={Paper} sx={{ maxHeight: 440 }}>
+              <Table
+                sx={{ minWidth: 650 }}
+                stickyHeader
+                aria-label="sticky table"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell>ID</TableCell>
+                    <TableCell align="left">Name</TableCell>
+                    <TableCell align="left">Email</TableCell>
+                    <TableCell align="left">Phone</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {Orders.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                        cursor: "pointer",
+                      }}
+                      onClick={() =>
+                        navigate(`/trainer/orders/${row.orderId}`, {
+                          state: {
+                            id: row.id,
+                            orderId: row.orderId,
+                            clientId: row.clientId,
+                            name: row.clientName,
+                            date: row.date,
+                            description: row.description,
+                            email: row.email,
+                            goal: row.goal,
+                            height: row.height,
+                            weight: row.weight,
+                            image: row.image,
+                            phone: row.phone,
+                            programme: row.programme,
+                          },
+                        })
+                      }
+                    >
+                      <TableCell align="left">{row.orderId}</TableCell>
+                      <TableCell align="left">{row.clientName}</TableCell>
+                      <TableCell align="left">{row.phone}</TableCell>
+                      <TableCell align="left">{row.email}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Paper>
         </Box>
       </Box>
     </div>

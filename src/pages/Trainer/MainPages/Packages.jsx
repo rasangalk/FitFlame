@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import AppBarTrainer from "../../../components/Trainer/AppBarTrainer";
-import { DataGrid } from "@mui/x-data-grid";
 import {
   Box,
   Button,
@@ -23,7 +22,7 @@ const Packages = () => {
   const packageRef = collection(db, "packages");
   const [Packages, setPackages] = useState([]);
   const q = query(packageRef, where("trainerId", "==", "5qO5w7dwRvzo3YeCoppe"));
-  const [rows, setrows] = useState([]);
+
   useEffect(() => {
     const getPackages = async () => {
       const data = await getDocs(q);
@@ -33,10 +32,11 @@ const Packages = () => {
           id: doc.id,
         }))
       );
+      console.log("first");
     };
 
     getPackages();
-  }, [Packages]);
+  }, []);
 
   const columns = [
     { field: "id", headerName: "ID", flex: 0.1 },

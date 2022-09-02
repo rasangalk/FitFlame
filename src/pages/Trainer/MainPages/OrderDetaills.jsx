@@ -1,5 +1,6 @@
 import {
   Button,
+  Modal,
   Paper,
   Table,
   TableBody,
@@ -11,26 +12,61 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
+import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import AppBarTrainer from "../../../components/Trainer/AppBarTrainer";
+import { db } from "../../../firebase-config";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 const OrderDetaills = () => {
-  function createData(name, age, weight, height, goal, program, phone, email) {
-    return { name, age, weight, height, goal, program, phone, email };
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => setOpen(false);
+
+  function createData(name, weight, height, goal, program, phone, email) {
+    return { name, weight, height, goal, program, phone, email };
   }
 
+  const orderId = location.state.id;
+  const clientId = location.state.clientId;
+  const name = location.state.name;
+  const date = location.state.date;
+  const description = location.state.description;
+  const email = location.state.email;
+  const goal = location.state.goal;
+  const height = location.state.height;
+  const weight = location.state.weight;
+  const image = location.state.image;
+  const phone = location.state.phone;
+  const programme = location.state.programme;
+
   const rows = [
-    createData(
-      "Nimesha Chamod",
-      22,
-      98,
-      178,
-      "Weight loss",
-      "3 Months",
-      "+94782345243",
-      "nimeshachamod@gmail.com"
-    ),
+    createData(name, weight, height, goal, programme, phone, email),
   ];
+
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "#ffff",
+    boxShadow: 24,
+    p: 3,
+  };
+
+  const updateStatus = async () => {
+    const orderDoc = doc(db, "orders", orderId);
+    const newFields = {
+      status: "accept",
+    };
+    await updateDoc(orderDoc, newFields).then(navigate("/trainer/orders"));
+  };
 
   return (
     <Box>
@@ -58,9 +94,7 @@ const OrderDetaills = () => {
                   <TableCell align="left" sx={{ color: "#2A3036" }}>
                     Name
                   </TableCell>
-                  <TableCell align="left" sx={{ color: "#2A3036" }}>
-                    Age
-                  </TableCell>
+
                   <TableCell align="left" sx={{ color: "#2A3036" }}>
                     Weight&nbsp;(kg)
                   </TableCell>
@@ -79,6 +113,9 @@ const OrderDetaills = () => {
                   <TableCell align="left" sx={{ color: "#2A3036" }}>
                     Email
                   </TableCell>
+                  <TableCell align="left" sx={{ color: "#2A3036" }}>
+                    Image
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -90,7 +127,7 @@ const OrderDetaills = () => {
                     <TableCell component="th" scope="row">
                       {row.name}
                     </TableCell>
-                    <TableCell align="left">{row.age}</TableCell>
+
                     <TableCell align="left">{row.weight}</TableCell>
                     <TableCell align="left">{row.height}</TableCell>
                     <TableCell align="left">{row.goal}</TableCell>
@@ -100,6 +137,11 @@ const OrderDetaills = () => {
                     <TableCell align="left">{row.phone}</TableCell>
 
                     <TableCell align="left">{row.email}</TableCell>
+                    <TableCell align="left">
+                      <Button variant="outlined" onClick={handleOpen}>
+                        view
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -112,11 +154,28 @@ const OrderDetaills = () => {
           label="Description"
           multiline
           rows={5}
-          defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Faucibus scelerisque lectus praesent semper. Viverra eu at amet consectetur habitasse. Pellentesque etiam quis viverra non et adipiscing. Sagittis consequat risus tortor, arcu enim sit. Adipiscing ornare laoreet viverra hac nunc nunc praesent varius vitae. Curabitur diam in sagittis ultrices aliquet tempor malesuada. Dignissim morbi fermentum, lectus ultricies cras tortor. Sit viverra id vitae, ornare pellentesque non, amet, fusce. Diam elementum dictum ac in id."
+          defaultValue={description}
           InputProps={{
             readOnly: true,
           }}
         />
+
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Box
+              sx={{
+                background: `url("${image}")no-repeat center/cover`,
+                height: "400px",
+                width: "400",
+              }}
+            ></Box>
+          </Box>
+        </Modal>
 
         <Box sx={{ display: "flex", gap: 4, marginTop: "3rem" }}>
           <Button
@@ -128,6 +187,7 @@ const OrderDetaills = () => {
           <Button
             sx={{ height: "40px", width: "130px", backgroundColor: "#3C56F5" }}
             variant="contained"
+            onClick={() => updateStatus()}
           >
             Accept
           </Button>
