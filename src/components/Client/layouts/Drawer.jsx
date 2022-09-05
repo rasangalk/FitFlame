@@ -47,7 +47,7 @@ export default function MiniDrawer() {
   const handleLogout = async () => {
     try {
       await LogOut();
-      logOutnavigate("/signIn");
+      logOutnavigate("/signin");
     } catch (error) {
       console.log(error.message);
     }

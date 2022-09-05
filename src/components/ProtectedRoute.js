@@ -26,11 +26,14 @@ const ProtectedRoute = ({ children }) => {
       );
     };
     getUser();
+
+    localStorage.setItem("token", user.accessToken);
   }, [user]);
   dispatch(setUserData(JSON.stringify(userDetails[0])));
 
-  if (!user) {
-    return;
+  const token = window.localStorage.getItem("token");
+  if (!user && !token) {
+    return <Navigate to="/signin" replace />;
   }
   return children;
 };
