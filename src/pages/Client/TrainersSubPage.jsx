@@ -1,5 +1,4 @@
 import {
-  Autocomplete,
   Button,
   Card,
   CardContent,
@@ -32,14 +31,12 @@ function TrainersSubPage() {
     }
     searchTrainer();
   }, [search]);
-  console.log("This is search", search);
 
   const searchTrainer = () => {
     const filtered = users.filter((user) =>
       user.name.toLowerCase().includes(search.toLowerCase())
     );
     setUsers(filtered);
-    console.log("Element is ", filtered);
   };
 
   return (
@@ -61,29 +58,6 @@ function TrainersSubPage() {
       >
         <Grid container>
           <Grid item xs={12} container justifyContent="flex-end">
-            {/* <Autocomplete
-              freeSolo
-              id="free-solo-2-demo"
-              disableClearable
-              sx={{
-                width: "400px",
-                marginBottom: "10px",
-                paddingTop: "20px",
-                marginRight: "5px",
-              }}
-              // options={top100Films.map((option) => option.title)}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  size="small"
-                  label="Search Trainer..."
-                  // InputProps={{
-                  //   ...params.InputProps,
-                  //   type: "search",
-                  // }}
-                />
-              )}
-            /> */}
             <TextField
               id="outlined-basic"
               size="small"

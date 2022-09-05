@@ -34,8 +34,6 @@ function SchedulesSubPage() {
     getSchedules();
   }, []);
 
-  console.log("See this", schedules);
-
   return (
     <Box
       p={0}

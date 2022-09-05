@@ -14,25 +14,31 @@ import { db } from "../../firebase-config";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlineRounded";
+import { useSelector } from "react-redux";
 const usersCollectionRef = collection(db, "orders");
 
 function OrdersSubPage() {
+  const userNew = useSelector((state) => state.setUserData.userData);
+
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    const getUsers = async () => {
-      const filterdData = query(
-        usersCollectionRef,
-        where("clientId", "==", "bVeT0xDbbWyyKJSLFYdH")
-      );
-      const querySnapshot = await getDocs(filterdData);
-      setOrders(
-        querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-      );
-    };
-    getUsers();
-  }, []);
+    if (userNew) {
+      const userID = JSON.parse(userNew);
+      const getUsers = async () => {
+        const filterdData = query(
+          usersCollectionRef,
+          where("clientId", "==", userID.user)
+        );
+        const querySnapshot = await getDocs(filterdData);
+        setOrders(
+          querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+        );
+      };
+      getUsers();
+    }
+  }, [userNew]);
 
   return (
     <Box
