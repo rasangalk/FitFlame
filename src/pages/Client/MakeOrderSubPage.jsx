@@ -13,19 +13,23 @@ import { useEffect, useState } from "react";
 
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import "./style.css";
-import { addDoc, collection, doc, getDoc, Timestamp } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 import { v4 } from "uuid";
 import { db, storage } from "../../firebase-config";
 import { ref, uploadBytes } from "firebase/storage";
 import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function MakeOrderSubPage() {
+  const userNew = useSelector((state) => state.setUserData.userData);
+
+  console.log("Mul eka", userNew);
+
   const current = new Date();
   const currentDate = `${current.getDate()}/${
     current.getMonth() + 1
   }/${current.getFullYear()}`;
   const location = useLocation();
-  const userId = "bVeT0xDbbWyyKJSLFYdH";
   const trainerId = location.state.id;
   const trainerName = location.state.name;
   const trainerMobile = location.state.mobile;
@@ -56,7 +60,7 @@ function MakeOrderSubPage() {
       trainerEmail: trainerEmail,
       trainerId: trainerId,
       date: currentDate,
-      clientId: userId,
+      clientId: data.user,
       status: "pending",
       orderId: Math.floor(1000 + Math.random() * 9000),
     });
@@ -71,19 +75,24 @@ function MakeOrderSubPage() {
   };
 
   useEffect(() => {
-    async function fetchData() {
-      const userDoc = doc(db, "users", userId);
-      const docSnap = await getDoc(userDoc);
-      setData(docSnap.data());
+    if (userNew) {
+      const userID = JSON.parse(userNew);
+      setData(userID);
+      // console.log("User IDDDDDD", userID.user);
+      // async function fetchData() {
+      //   const userDoc = doc(db, "users", userID);
+      //   const docSnap = await getDoc(userDoc);
 
       // const trainerDoc = doc(db, "users", trainerId);
       // const trainerDocSnap = await getDoc(trainerDoc);
       // setTrainerData(trainerDocSnap.data());
+      // }
+      // fetchData();
     }
-    fetchData();
-  }, []);
+  }, [userNew]);
 
-  console.log("Trainer details", data);
+  console.log("User IDDDDDD", data);
+
   return (
     <Box
       p={0}

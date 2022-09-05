@@ -12,6 +12,12 @@ import MakeOrder from "./pages/Client/Main-Pages/Make-Order";
 import ViewOrder from "./pages/Client/Main-Pages/View-Order";
 import UpdateOrder from "./pages/Client/Main-Pages/Update-Order";
 
+import SignIn from "./pages/User/Main-Pages/SignIn";
+import SignUp from "./pages/User/Main-Pages/SignUp";
+import PasswordReset from "./pages/User/Main-Pages/PasswordReset";
+import { UserAuthContextProvider } from "./Context/UserAuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 export function App() {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -39,16 +45,79 @@ export function App() {
   return (
     <div>
       <CssBaseline />
-      <Routes>
-        <Route path="/trainers" element={<TrainersList />} />
-        <Route path="/blogs" element={<Blogs />} />
-        <Route path="/orders" element={<Orders />} />
-        <Route path="/schedules" element={<Schedules />} />
-        <Route path="/trainer-details" element={<TrainerDetails />} />
-        <Route path="/make-order" element={<MakeOrder />} />
-        <Route path="/view-order" element={<ViewOrder />} />
-        <Route path="/update-order" element={<UpdateOrder />} />
-      </Routes>
+      <UserAuthContextProvider>
+        <Routes>
+          <Route
+            path="/trainers"
+            element={
+              <ProtectedRoute>
+                <TrainersList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/blogs"
+            element={
+              <ProtectedRoute>
+                <Blogs />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/orders"
+            element={
+              <ProtectedRoute>
+                <Orders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/schedules"
+            element={
+              <ProtectedRoute>
+                <Schedules />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/trainer-details"
+            element={
+              <ProtectedRoute>
+                <TrainerDetails />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/make-order"
+            element={
+              <ProtectedRoute>
+                <MakeOrder />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/view-order"
+            element={
+              <ProtectedRoute>
+                <ViewOrder />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/update-order"
+            element={
+              <ProtectedRoute>
+                <UpdateOrder />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Chamod */}
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/reset-password" element={<PasswordReset />} />
+        </Routes>
+      </UserAuthContextProvider>
     </div>
   );
 }

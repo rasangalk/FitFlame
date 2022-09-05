@@ -128,8 +128,6 @@ function UpdateOrderSubPage() {
       });
   };
 
-  console.log("MEka balapan", checkImage);
-
   return (
     <Box
       p={0}

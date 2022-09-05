@@ -61,7 +61,7 @@ function TrainerDetailsSubPage() {
   }, []);
 
   const rows = [createData(data.name, data.age, data.mobile, data.email)];
-  console.log("This is what is expect", data);
+
   return (
     <Box
       p={0}

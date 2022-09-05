@@ -14,6 +14,7 @@ import EventNoteIcon from "@mui/icons-material/EventNote";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { styled } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useUserAuth } from "../../../Context/UserAuthContext";
 
 const drawerWidth = 64;
 
@@ -40,6 +41,17 @@ const StyledListItemButton = styled(ListItemButton)({
 });
 
 export default function MiniDrawer() {
+  const { LogOut, user } = useUserAuth();
+  console.log(user);
+  const logOutnavigate = useNavigate();
+  const handleLogout = async () => {
+    try {
+      await LogOut();
+      logOutnavigate("/signIn");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -199,11 +211,7 @@ export default function MiniDrawer() {
           {drawer}
           <StyledList sx={{ position: "fixed", bottom: 0 }}>
             <ListItem disablePadding>
-              <StyledListItemButton
-                onClick={() => {
-                  navigate("/blogs");
-                }}
-              >
+              <StyledListItemButton onClick={handleLogout}>
                 <LogoutIcon
                   sx={{
                     color: "#2A3036",
