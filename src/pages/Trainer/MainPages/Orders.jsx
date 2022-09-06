@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   Box,
-  Button,
   Paper,
   Table,
   TableBody,
@@ -18,10 +17,6 @@ import { useNavigate } from "react-router-dom";
 
 const Orders = () => {
   const [Orders, setOrders] = useState([]);
-  const [ID, setID] = useState();
-  const [Name, setName] = useState();
-  const [Email, setEmail] = useState();
-  const [Phone, setPhone] = useState();
 
   const navigate = useNavigate();
 
@@ -93,6 +88,7 @@ const Orders = () => {
                         navigate(`/trainer/orders/${row.orderId}`, {
                           state: {
                             id: row.id,
+                            trainerId: row.trainerId,
                             orderId: row.orderId,
                             clientId: row.clientId,
                             name: row.clientName,
@@ -111,8 +107,8 @@ const Orders = () => {
                     >
                       <TableCell align="left">{row.orderId}</TableCell>
                       <TableCell align="left">{row.clientName}</TableCell>
-                      <TableCell align="left">{row.phone}</TableCell>
                       <TableCell align="left">{row.email}</TableCell>
+                      <TableCell align="left">{row.phone}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

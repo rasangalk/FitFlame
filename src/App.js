@@ -18,6 +18,7 @@ import TrainerProfile from "./pages/Trainer/MainPages/Profile";
 import TrainerProfileEdit from "./pages/Trainer/MainPages/ProfileEdit";
 import TrainerCreatepackage from "./pages/Trainer/MainPages/Createpackage";
 import TrainerUpdatePackage from "./pages/Trainer/MainPages/UpdatePackage";
+import TrainerClientDetails from "./pages/Trainer/MainPages/ClientDetails";
 
 export function App() {
   const dispatch = useDispatch();
@@ -44,6 +45,7 @@ export function App() {
         <Route path="/orders" element={<Orders />} />
         <Route path="/schedules" element={<Schedules />} />
         <Route path="/trainer/clients" element={<TrainerClients />} />
+        <Route path="/trainer/clients/:id" element={<TrainerClientDetails />} />
         <Route path="/trainer/orders" element={<TrainerOrders />} />
         <Route path="/trainer/packages" element={<TrainerPackages />} />
         <Route path="/trainer/orders/:id" element={<TrainerOrderDetaills />} />

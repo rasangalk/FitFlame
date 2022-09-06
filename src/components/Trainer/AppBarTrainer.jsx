@@ -48,7 +48,9 @@ const AppBarTrainer = ({ trainerName }) => {
   // Handles items in the menu
   const list = (anchor) => (
     <Box
-      sx={{ width: anchor === "top" ? "auto" : 250 }}
+      sx={{
+        width: anchor === "top" ? "auto" : 250,
+      }}
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
@@ -89,7 +91,7 @@ const AppBarTrainer = ({ trainerName }) => {
 
   return (
     <Box>
-      <AppBar position="static" sx={{ backgroundColor: "#2A3036" }}>
+      <AppBar position="sticky" sx={{ backgroundColor: "#2A3036" }}>
         <Toolbar>
           <IconButton
             size="large"

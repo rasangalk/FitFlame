@@ -1,8 +1,90 @@
 import { Box, Button, TextField } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import AppBarTrainer from "../../../components/Trainer/AppBarTrainer";
+import { db } from "../../../firebase-config";
+import { addDoc, collection } from "firebase/firestore";
 
 const Plan = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [workout, setWorkout] = useState();
+  const [meal, setMeal] = useState();
+  const [description, setDescription] = useState();
+
+  const orderId = location.state.orderId;
+  const clientId = location.state.clientId;
+  const name = location.state.name;
+  const date = location.state.date;
+  const desc = location.state.description;
+  const email = location.state.email;
+  const goal = location.state.goal;
+  const height = location.state.height;
+  const weight = location.state.weight;
+  const image = location.state.image;
+  const phone = location.state.phone;
+  const programme = location.state.programme;
+  const trainer = location.state.trainer;
+
+  var today = new Date();
+  // returns year as YY
+  var year = today.getFullYear().toString();
+  // returns month
+  var month;
+  var month = parseInt(today.getMonth().toString());
+  month = month + 1;
+  month = month.toString();
+  if (month.length == 1) {
+    month = "0" + month;
+  }
+  // returns day
+  var day = today.getDate().toString();
+  if (day.length == 1) {
+    day = "0" + day;
+  }
+  // returns hours
+  var hours = today.getHours().toString();
+  if (hours.length == 1) {
+    hours = "0" + hours;
+  }
+  // returns minutes
+  var minutes = today.getMinutes().toString();
+  if (minutes.length == 1) {
+    minutes = "0" + minutes;
+  }
+  // returns seconds
+  var seconds = today.getSeconds().toString();
+  if (seconds.length == 1) {
+    seconds = "0" + seconds;
+  }
+  // returns formatted date
+  var formatedDate =
+    year.substr(2, 3) + month + day + "." + hours + minutes + seconds;
+  const clientID = parseFloat(formatedDate);
+
+  const clientsRef = collection(db, "clients");
+
+  const createPlan = async () => {
+    await addDoc(clientsRef, {
+      clientId: clientID,
+      orderId: orderId,
+      name: name,
+      date: date,
+      clientDescription: desc,
+      email: email,
+      goal: goal,
+      height: height,
+      weight: weight,
+      image: image,
+      phone: phone,
+      programme: programme,
+      trainerId: trainer,
+      workoutPlan: workout,
+      mealPlan: meal,
+      trainerDescription: description,
+    }).then(navigate("/trainer/orders"));
+  };
+
   return (
     <Box>
       <AppBarTrainer trainerName="Hi, Randy!"></AppBarTrainer>
@@ -14,6 +96,7 @@ const Plan = () => {
             label="Workout Plan"
             multiline
             rows={5}
+            onChange={(e) => setWorkout(e.target.value)}
           />
           <TextField
             sx={{ width: "100%" }}
@@ -21,6 +104,7 @@ const Plan = () => {
             label="Meal Plan"
             multiline
             rows={5}
+            onChange={(e) => setMeal(e.target.value)}
           />
           <TextField
             sx={{ width: "100%" }}
@@ -28,6 +112,7 @@ const Plan = () => {
             label="Description"
             multiline
             rows={5}
+            onChange={(e) => setDescription(e.target.value)}
           />
         </Box>
         <Button
@@ -38,6 +123,7 @@ const Plan = () => {
             marginTop: "3rem",
           }}
           variant="contained"
+          onClick={createPlan}
         >
           send
         </Button>
