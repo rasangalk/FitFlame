@@ -6,15 +6,7 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import React, { useState } from "react";
 import TemporaryDrawer from "./Drawer";
-import { makeStyles } from "@mui/styles";
-import LogoutIcon from "@mui/icons-material/Logout";
 
-const useStyles = makeStyles({
-  drawer: {
-    width: 250,
-    top: "40px",
-  },
-});
 export default function ButtonAppBar() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   return (

@@ -4,7 +4,11 @@ import Blogs from "./pages/Client/Main-Pages/Blogs";
 import Orders from "./pages/Client/Main-Pages/Orders";
 import Schedules from "./pages/Client/Main-Pages/Schedules";
 import TrainersList from "./pages/Client/Main-Pages/Trainers-List";
-import Delete from "./pages/Admin/Delete";
+import BlogList from "./pages/Admin/MainPages/BlogList";
+import BlogCreate from "./pages/Admin/MainPages/BlogCreate";
+import BlogView from "./pages/Admin/MainPages/BlogView";
+import BlogUpdate from "./pages/Admin/MainPages/BlogUpdate";
+import AdminUserList from "./pages/Admin/MainPages/AdminUserList";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setTileName } from "./redux/AppbarTitleSlice";
@@ -33,7 +37,11 @@ export function App() {
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/schedules" element={<Schedules />} />
-        <Route path="/admin" element={<Delete />} />
+        <Route path="/blog" element={<BlogList />} />
+        <Route path="/blog/create" element={<BlogCreate />} />
+        <Route path="/blog/view" element={<BlogView />} />
+        <Route path="/blog/update" element={<BlogUpdate />} />
+        <Route path="/admin/users" element={<AdminUserList />} />
       </Routes>
     </div>
   );

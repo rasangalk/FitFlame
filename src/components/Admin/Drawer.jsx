@@ -8,11 +8,11 @@ import ListItemText from "@mui/material/ListItemText";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import { makeStyles } from "@mui/styles";
 import LogoutIcon from "@mui/icons-material/Logout";
 import DescriptionIcon from "@mui/icons-material/Description";
 import PeopleIcon from "@mui/icons-material/People";
 import { styled } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const DrawerWidth = 240;
 
@@ -22,6 +22,8 @@ const StyledBottomNavigation = styled(BottomNavigation)({
   bottom: 0,
 });
 export default function TemporaryDrawer() {
+  const navigate = useNavigate();
+
   return (
     <Drawer
       variant="persistance"
@@ -39,7 +41,13 @@ export default function TemporaryDrawer() {
       <Box sx={{ overflow: "auto" }}>
         <List>
           {["Blogs", "Users"].map((text, index) => (
-            <ListItem button key={text}>
+            <ListItem
+              button
+              key={text}
+              onClick={() => {
+                text === "Blogs" ? navigate("/blog") : navigate("/admin/users");
+              }}
+            >
               <ListItemIcon>
                 {text === "Users" ? <PeopleIcon /> : <DescriptionIcon />}
               </ListItemIcon>
