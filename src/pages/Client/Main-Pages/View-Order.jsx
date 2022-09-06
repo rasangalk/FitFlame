@@ -1,11 +1,10 @@
-import { Box, Grid } from "@mui/material";
 import React from "react";
 import MenuAppBar from "../../../components/Client/layouts/Appbar";
 import MiniDrawer from "../../../components/Client/layouts/Drawer";
-import OrdersSubPage from "../OrdersSubPage";
+import ViewOrderSubPage from "../ViewOrderSubPage";
 import classes from "./CustomGrid.module.css";
 
-function Orders() {
+function ViewOrder() {
   return (
     <div>
       <div className={classes.row}>
@@ -18,11 +17,11 @@ function Orders() {
           <MiniDrawer />
         </div>
         <div className={`${classes["col"]} ${classes["col-11"]}`}>
-          <OrdersSubPage />
+          <ViewOrderSubPage />
         </div>
       </div>
     </div>
   );
 }
 
-export default Orders;
+export default ViewOrder;
