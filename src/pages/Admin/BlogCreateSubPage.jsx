@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { db, storage } from "../../firebase-config";
 import { Box, Grid, Button, TextField } from "@mui/material";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
@@ -6,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { ref, uploadBytes } from "firebase/storage";
 import LoadingSpinner from "../../components/Admin/LoadingSpinner";
 import { v4 } from "uuid";
+import "./style.css";
 
 const BlogCreateSubPage = () => {
   const [url, setURL] = useState("");
@@ -13,9 +15,20 @@ const BlogCreateSubPage = () => {
   const [content, setContent] = useState("");
   const [imageUpload, setImageUpload] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState("");
+
+  const userNew = useSelector((state) => state.setUserData.userData);
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (userNew) {
+      const userID = JSON.parse(userNew);
+      setData(userID);
+    }
+  }, [userNew]);
+
+  console.log("create", data);
   const handlePublish = async (e) => {
     const IName = imageUpload.name + v4();
 
@@ -27,7 +40,7 @@ const BlogCreateSubPage = () => {
         title: title,
         content: content,
         url: url,
-        author: "random person",
+        author: data.name,
         date: Timestamp.now(),
         image: `${IName}`,
         blogID: Math.floor(10000 + Math.random() * 90000),
@@ -57,8 +70,9 @@ const BlogCreateSubPage = () => {
         label="Title"
         id="Title"
         value={title}
+        sx={{ textTransform: "capitalize" }}
         onInput={(e) => {
-          e.target.value = e.target.value.slice(0, 70);
+          e.target.value = e.target.value.slice(0, 65);
           setTitle(e.target.value);
         }}
       />
@@ -74,7 +88,6 @@ const BlogCreateSubPage = () => {
           setContent(e.target.value);
         }}
       />
-      {/* <FileUpload value={file} onChange={setFile} /> */}
       <Box sx={{ position: "absolute" }}>
         <Button
           variant="outlined"

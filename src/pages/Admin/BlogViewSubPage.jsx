@@ -39,7 +39,7 @@ const BlogViewSubPage = () => {
           my: "30px",
         }}
       >
-        <h1>{blogData.title}</h1>
+        <h1 sx={{ textTransform: "capitalize" }}>{blogData.title}</h1>
         <div>
           <img src={imageURL} alt="demo" style={{ height: "200px" }} />
         </div>
@@ -66,7 +66,7 @@ const BlogViewSubPage = () => {
             },
           }}
         >
-          <p>{blogData.content}</p>
+          <span>{blogData.content}</span>
         </Box>
 
         <Grid container spacing={2} sx={{ mt: "0" }}>

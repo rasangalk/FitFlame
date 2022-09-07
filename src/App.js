@@ -122,7 +122,14 @@ export function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/reset-password" element={<PasswordReset />} />
 
-          <Route path="/blog" element={<BlogList />} />
+          <Route
+            path="/blog"
+            element={
+              <ProtectedRoute>
+                <BlogList />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/blog/create" element={<BlogCreate />} />
           <Route path="/blog/view" element={<BlogView />} />
           <Route path="/blog/update" element={<BlogUpdate />} />
