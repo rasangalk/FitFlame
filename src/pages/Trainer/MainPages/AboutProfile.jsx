@@ -6,13 +6,29 @@ import { db } from "../../../firebase-config";
 import { doc, updateDoc } from "firebase/firestore";
 import { storage } from "./../../../firebase-config";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 const AboutProfile = () => {
   const [selected, setSelected] = useState([]);
   const [imagePreview, setImagePreview] = useState(null);
 
-  const [About, setAbout] = useState();
-  const [ImageURL, setImageURL] = useState();
+  const [About, setAbout] = useState("");
+  const [ImageURL, setImageURL] = useState("");
+  const navigate = useNavigate();
+
+  const ErrMsg = (errMsg) => {
+    toast.error(errMsg, {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
 
   // update profile
   const updateUser = async (id) => {
@@ -20,18 +36,24 @@ const AboutProfile = () => {
     const userDoc = doc(db, "users", id);
     const imageRef = ref(storage, `TrainerProfile/${selected.name}`);
 
-    uploadBytes(imageRef, selected).then(() => {
-      getDownloadURL(imageRef).then((url) => {
-        setImageURL(url);
+    if (About === "") {
+      ErrMsg("Fill about section!");
+    } else if (selected === "") {
+      ErrMsg("Image error!");
+    } else {
+      uploadBytes(imageRef, selected).then(() => {
+        getDownloadURL(imageRef).then((url) => {
+          setImageURL(url);
+        });
       });
-    });
 
-    const newFields = {
-      description: About,
-      rate: Math.floor(Math.random() * 6),
-      picture: ImageURL,
-    };
-    await updateDoc(userDoc, newFields);
+      const newFields = {
+        description: About,
+        rate: Math.floor(Math.random() * 6),
+        picture: ImageURL,
+      };
+      await updateDoc(userDoc, newFields).then(navigate("/trainer/orders"));
+    }
   };
 
   const handleImageChange = (e) => {
@@ -61,6 +83,8 @@ const AboutProfile = () => {
           height: "80%",
         }}
       >
+        <ToastContainer />
+
         <Box
           sx={{
             margin: "5rem 5rem 1rem",
