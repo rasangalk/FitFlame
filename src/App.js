@@ -18,8 +18,6 @@ import PasswordReset from "./pages/User/Main-Pages/PasswordReset";
 import { UserAuthContextProvider } from "./Context/UserAuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-
-
 import TrainerClients from "./pages/Trainer/MainPages/Clients";
 import TrainerOrders from "./pages/Trainer/MainPages/Orders";
 import TrainerPackages from "./pages/Trainer/MainPages/Packages";
@@ -128,31 +126,38 @@ export function App() {
           />
 
           {/* Chamod */}
-          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signin" exact element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/reset-password" element={<PasswordReset />} />
 
-
-
           {/* Rasanga */}
           <Route path="/trainer/clients" element={<TrainerClients />} />
-        <Route path="/trainer/clients/:id" element={<TrainerClientDetails />} />
-        <Route path="/trainer/orders" element={<TrainerOrders />} />
-        <Route path="/trainer/packages" element={<TrainerPackages />} />
-        <Route path="/trainer/orders/:id" element={<TrainerOrderDetaills />} />
-        <Route path="/trainer/create-plan/:id" element={<TrainerPlan />} />
-        <Route path="/trainer/plan/:id" element={<TrainerViewPlan />} />
-        <Route path="/trainer/about" element={<TrainerAboutProfile />} />
-        <Route path="/trainer/profile" element={<TrainerProfile />} />
-        <Route path="/trainer/profile-edit" element={<TrainerProfileEdit />} />
-        <Route
-          path="/trainer/package-create"
-          element={<TrainerCreatepackage />}
-        />
-        <Route
-          path="/trainer/package-edit"
-          element={<TrainerUpdatePackage />}
-        />
+          <Route
+            path="/trainer/clients/:id"
+            element={<TrainerClientDetails />}
+          />
+          <Route path="/trainer/orders" element={<TrainerOrders />} />
+          <Route path="/trainer/packages" element={<TrainerPackages />} />
+          <Route
+            path="/trainer/orders/:id"
+            element={<TrainerOrderDetaills />}
+          />
+          <Route path="/trainer/create-plan/:id" element={<TrainerPlan />} />
+          <Route path="/trainer/plan/:id" element={<TrainerViewPlan />} />
+          <Route path="/trainer/about" element={<TrainerAboutProfile />} />
+          <Route path="/trainer/profile" element={<TrainerProfile />} />
+          <Route
+            path="/trainer/profile-edit"
+            element={<TrainerProfileEdit />}
+          />
+          <Route
+            path="/trainer/package-create"
+            element={<TrainerCreatepackage />}
+          />
+          <Route
+            path="/trainer/package-edit"
+            element={<TrainerUpdatePackage />}
+          />
         </Routes>
       </UserAuthContextProvider>
     </div>
