@@ -1,10 +1,7 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
 import MenuAppBar from "../../../components/Client/layouts/Appbar";
 import MiniDrawer from "../../../components/Client/layouts/Drawer";
 import TrainersSubPage from "../TrainersSubPage";
-import { Stack } from "@mui/material";
 import classes from "./CustomGrid.module.css";
 
 export default function TrainersList() {

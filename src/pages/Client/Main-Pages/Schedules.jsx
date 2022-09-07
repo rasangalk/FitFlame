@@ -2,18 +2,26 @@ import { Box, Grid } from "@mui/material";
 import React from "react";
 import MenuAppBar from "../../../components/Client/layouts/Appbar";
 import MiniDrawer from "../../../components/Client/layouts/Drawer";
+import SchedulesSubPage from "../SchedulesSubPage";
+import classes from "./CustomGrid.module.css";
 
 function Schedules() {
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <MenuAppBar />
-      <Grid container spacing={0}>
-        <Grid item md={0.5}>
+    <div>
+      <div className={classes.row}>
+        <div className={`${classes["col"]} ${classes["col-12"]}`}>
+          <MenuAppBar />
+        </div>
+      </div>
+      <div className={classes.row}>
+        <div className={`${classes["col"]} ${classes["col-1"]}`}>
           <MiniDrawer />
-        </Grid>
-        <Grid item md={11.5}></Grid>
-      </Grid>
-    </Box>
+        </div>
+        <div className={`${classes["col"]} ${classes["col-11"]}`}>
+          <SchedulesSubPage />
+        </div>
+      </div>
+    </div>
   );
 }
 
