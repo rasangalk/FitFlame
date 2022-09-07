@@ -21,18 +21,18 @@ import PasswordReset from './pages/User/Main-Pages/PasswordReset'
 import { UserAuthContextProvider } from './Context/UserAuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 
-import TrainerClients from './pages/Trainer/MainPages/Clients'
-import TrainerOrders from './pages/Trainer/MainPages/Orders'
-import TrainerPackages from './pages/Trainer/MainPages/Packages'
-import TrainerOrderDetaills from './pages/Trainer/MainPages/OrderDetaills'
-import TrainerPlan from './pages/Trainer/MainPages/Plan'
-import TrainerViewPlan from './pages/Trainer/MainPages/ViewPlan'
-import TrainerAboutProfile from './pages/Trainer/MainPages/AboutProfile'
-import TrainerProfile from './pages/Trainer/MainPages/Profile'
-import TrainerProfileEdit from './pages/Trainer/MainPages/ProfileEdit'
-import TrainerCreatepackage from './pages/Trainer/MainPages/Createpackage'
-import TrainerUpdatePackage from './pages/Trainer/MainPages/UpdatePackage'
-import TrainerClientDetails from './pages/Trainer/MainPages/ClientDetails'
+import TrainerClients from "./pages/Trainer/MainPages/Clients";
+import TrainerOrders from "./pages/Trainer/MainPages/Orders";
+import TrainerPackages from "./pages/Trainer/MainPages/Packages";
+import TrainerOrderDetaills from "./pages/Trainer/MainPages/OrderDetaills";
+import TrainerPlan from "./pages/Trainer/MainPages/Plan";
+import TrainerViewPlan from "./pages/Trainer/MainPages/ViewPlan";
+import TrainerAboutProfile from "./pages/Trainer/MainPages/AboutProfile";
+import TrainerProfile from "./pages/Trainer/MainPages/Profile";
+import TrainerProfileEdit from "./pages/Trainer/MainPages/ProfileEdit";
+import TrainerCreatepackage from "./pages/Trainer/MainPages/Createpackage";
+import TrainerUpdatePackage from "./pages/Trainer/MainPages/UpdatePackage";
+import TrainerClientDetails from "./pages/Trainer/MainPages/ClientDetails";
 
 export function App() {
   const dispatch = useDispatch()
@@ -153,36 +153,38 @@ export function App() {
           />
 
           {/* Chamod */}
-          <Route path='/signin' element={<SignIn />} />
-          <Route path='/signup' element={<SignUp />} />
-          <Route path='/reset-password' element={<PasswordReset />} />
+
+          <Route path="/signin" exact element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/reset-password" element={<PasswordReset />} />
 
           {/* Rasanga */}
-          <Route path='/trainer/clients' element={<TrainerClients />} />
+          <Route path="/trainer/clients" element={<TrainerClients />} />
           <Route
-            path='/trainer/clients/:id'
+            path="/trainer/clients/:id"
             element={<TrainerClientDetails />}
           />
-          <Route path='/trainer/orders' element={<TrainerOrders />} />
-          <Route path='/trainer/packages' element={<TrainerPackages />} />
+          <Route path="/trainer/orders" element={<TrainerOrders />} />
+          <Route path="/trainer/packages" element={<TrainerPackages />} />
           <Route
-            path='/trainer/orders/:id'
+            path="/trainer/orders/:id"
             element={<TrainerOrderDetaills />}
           />
-          <Route path='/trainer/create-plan/:id' element={<TrainerPlan />} />
-          <Route path='/trainer/plan/:id' element={<TrainerViewPlan />} />
-          <Route path='/trainer/about' element={<TrainerAboutProfile />} />
-          <Route path='/trainer/profile' element={<TrainerProfile />} />
+          <Route path="/trainer/create-plan/:id" element={<TrainerPlan />} />
+          <Route path="/trainer/plan/:id" element={<TrainerViewPlan />} />
+          <Route path="/trainer/about" element={<TrainerAboutProfile />} />
+          <Route path="/trainer/profile" element={<TrainerProfile />} />
           <Route
-            path='/trainer/profile-edit'
+            path="/trainer/profile-edit"
             element={<TrainerProfileEdit />}
           />
           <Route
-            path='/trainer/package-create'
+            path="/trainer/package-create"
             element={<TrainerCreatepackage />}
           />
           <Route
-            path='/trainer/package-edit'
+            path="/trainer/package-edit"
+            
             element={<TrainerUpdatePackage />}
           />
         </Routes>

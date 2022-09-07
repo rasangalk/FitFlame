@@ -16,6 +16,7 @@ function Blogs() {
       <div className={classes.row}>
         <div className={`${classes['col']} ${classes['col-1']}`}>
           <MiniDrawer />
+
         </div>
         <div className={`${classes['col']} ${classes['col-11']}`}>
           <BlogsSubPage />
@@ -23,6 +24,7 @@ function Blogs() {
       </div>
     </div>
   )
+
 }
 
 export default Blogs
