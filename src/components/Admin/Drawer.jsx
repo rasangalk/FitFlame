@@ -1,0 +1,64 @@
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import React from "react";
+import Drawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import BottomNavigation from "@mui/material/BottomNavigation";
+import BottomNavigationAction from "@mui/material/BottomNavigationAction";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import LogoutIcon from "@mui/icons-material/Logout";
+import DescriptionIcon from "@mui/icons-material/Description";
+import PeopleIcon from "@mui/icons-material/People";
+import { styled } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+
+const DrawerWidth = 240;
+
+const StyledBottomNavigation = styled(BottomNavigation)({
+  width: DrawerWidth,
+  position: "fixed",
+  bottom: 0,
+});
+export default function TemporaryDrawer() {
+  const navigate = useNavigate();
+
+  return (
+    <Drawer
+      variant="persistance"
+      open="true"
+      sx={{
+        width: DrawerWidth,
+        flexShrink: 0,
+        [`& .MuiDrawer-paper`]: {
+          width: DrawerWidth,
+          boxSizing: "border-box",
+        },
+      }}
+    >
+      <Toolbar />
+      <Box sx={{ overflow: "auto" }}>
+        <List>
+          {["Blogs", "Users"].map((text, index) => (
+            <ListItem
+              button
+              key={text}
+              onClick={() => {
+                text === "Blogs" ? navigate("/blog") : navigate("/admin/users");
+              }}
+            >
+              <ListItemIcon>
+                {text === "Users" ? <PeopleIcon /> : <DescriptionIcon />}
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+        </List>
+        <StyledBottomNavigation showLabels>
+          <BottomNavigationAction icon={<LogoutIcon />} />
+        </StyledBottomNavigation>
+      </Box>
+    </Drawer>
+  );
+}
