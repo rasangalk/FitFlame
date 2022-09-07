@@ -3,7 +3,7 @@ import React from "react";
 import ButtonAppBar from "../../../components/Admin/AppBar";
 import BlogViewSubPage from "../BlogViewSubPage";
 
-function BlogView() {
+function BlogViewAdmin() {
   return (
     <>
       <Grid container spacing={8} direction="column">
@@ -18,4 +18,4 @@ function BlogView() {
   );
 }
 
-export default BlogView;
+export default BlogViewAdmin;
