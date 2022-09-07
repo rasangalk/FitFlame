@@ -2,10 +2,10 @@ import { Box, Grid } from '@mui/material'
 import React from 'react'
 import MenuAppBar from '../../../components/Client/layouts/Appbar'
 import MiniDrawer from '../../../components/Client/layouts/Drawer'
-import BlogsSubPage from '../BlogsSubPage'
 import classes from './CustomGrid.module.css'
+import ClientProfileUpdateSub from '../ClientProfileUpdateSub'
 
-function Blogs() {
+function ClientProfileUpdate() {
   return (
     <div>
       <div className={classes.row}>
@@ -16,15 +16,13 @@ function Blogs() {
       <div className={classes.row}>
         <div className={`${classes['col']} ${classes['col-1']}`}>
           <MiniDrawer />
-
         </div>
         <div className={`${classes['col']} ${classes['col-11']}`}>
-          <BlogsSubPage />
+          <ClientProfileUpdateSub />
         </div>
       </div>
     </div>
   )
-
 }
 
-export default Blogs
+export default ClientProfileUpdate
