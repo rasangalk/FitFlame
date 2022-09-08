@@ -18,6 +18,9 @@ import { db } from '../../firebase-config'
 import { collection, addDoc } from 'firebase/firestore'
 import { getAuth } from '@firebase/auth'
 import { useUserAuth } from '../../Context/UserAuthContext'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import InputAdornment from '@mui/material/InputAdornment'
 
 function SignUpForm() {
   const [email, setEmail] = useState('')
@@ -27,47 +30,60 @@ function SignUpForm() {
   const [NewRole, setNewRole] = useState('')
   const [newGender, setNewGender] = useState('')
   const [newAge, setNewAge] = useState('')
-  const [error, setError] = useState('')
+  const [isError, setIsError] = useState(false)
   const { signUp } = useUserAuth()
   const navigate = useNavigate()
 
   const auth = getAuth()
   const usersCollectionRef = collection(db, 'users')
 
-  const createUser = async (e) => {
-    e.preventDefault()
-    setError('')
-    try {
-      await signUp(email, password).then(() => {
-        const user = auth.currentUser
-        addDoc(usersCollectionRef, {
-          name: newName,
-          mobile: Number(newMobile),
-          role: NewRole,
-          gender: newGender,
-          email: user.email,
-          age: Number(newAge),
-          user: user.uid,
+  const ErrMsg = (errMsg) => {
+    toast.error(errMsg, {
+      position: 'top-right',
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    })
+  }
+
+  const createUser = async () => {
+    if (newName === '') {
+      ErrMsg('Fill the required fields!')
+    } else if (newMobile === '') {
+      ErrMsg('Fill the required fields!')
+    } else if (NewRole === '') {
+      ErrMsg('Fill the required fields!')
+    } else if (newGender === '') {
+      ErrMsg('Fill the required fields!')
+    } else if (email === '') {
+      ErrMsg('Fill the required fields!')
+    } else if (newAge === '') {
+      ErrMsg('Fill the required fields!')
+    } else {
+      await signUp(email, password)
+        .then(() => {
+          const user = auth.currentUser
+          addDoc(usersCollectionRef, {
+            name: newName,
+            mobile: newMobile,
+            role: NewRole,
+            gender: newGender,
+            email: user.email,
+            age: Number(newAge),
+            user: user.uid,
+          })
         })
-        console.log(
-          newName,
-          newMobile,
-          NewRole,
-          newGender,
-          user.email,
-          newAge,
-          user.uid
-        )
-      })
-      navigate('/signIn')
-    } catch (err) {
-      setError(err.message)
+        .then(navigate('/signIn'))
     }
   }
 
   return (
     <Grid container component='main' sx={{ height: '100vh' }}>
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <ToastContainer />
         <Box
           sx={{
             my: 8,
@@ -83,7 +99,7 @@ function SignUpForm() {
           <Typography component='h1' variant='h5'>
             Sign Up
           </Typography>
-          <Box noValidate sx={{ mt: 3 }}>
+          <Box sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -92,7 +108,6 @@ function SignUpForm() {
                   id='name'
                   label='Name'
                   name='name'
-                  autoComplete='name'
                   autoFocus
                   onChange={(event) => {
                     setNewName(event.target.value)
@@ -101,6 +116,7 @@ function SignUpForm() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  required
                   name='email'
                   fullWidth
                   id='email'
@@ -112,6 +128,7 @@ function SignUpForm() {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
+                  required
                   name='age'
                   fullWidth
                   id='age'
@@ -123,14 +140,24 @@ function SignUpForm() {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
+                  type='tel'
+                  value={newMobile}
+                  error={isError}
                   required
                   fullWidth
                   id='mobile'
                   label='Mobile'
                   name='mobile'
-                  autoComplete='mobile'
                   onChange={(event) => {
                     setNewMobile(event.target.value)
+                    if (event.target.value.length > 10) {
+                      setIsError(true)
+                    }
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position='start'>+94</InputAdornment>
+                    ),
                   }}
                 />
               </Grid>
@@ -138,6 +165,7 @@ function SignUpForm() {
                 <FormControl fullWidth>
                   <InputLabel id='role'>Role</InputLabel>
                   <Select
+                    required
                     labelId='role'
                     id='role'
                     value={NewRole}
@@ -147,7 +175,7 @@ function SignUpForm() {
                     }}
                   >
                     <MenuItem value={'Client'}>Client</MenuItem>
-                    <MenuItem value={'Trainter'}>Trainer</MenuItem>
+                    <MenuItem value={'Trainer'}>Trainer</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -155,6 +183,7 @@ function SignUpForm() {
                 <FormControl fullWidth>
                   <InputLabel id='gender'>Gender</InputLabel>
                   <Select
+                    required
                     labelId='gender'
                     id='gender'
                     value={newGender}
@@ -170,6 +199,7 @@ function SignUpForm() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  required
                   fullWidth
                   name='password'
                   label='Password'
