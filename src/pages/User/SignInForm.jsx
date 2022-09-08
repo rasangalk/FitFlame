@@ -11,6 +11,8 @@ import Typography from "@mui/material/Typography";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Avatar from "@mui/material/Avatar";
 import { useUserAuth } from "../../Context/UserAuthContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function SignInForm() {
   const [email, setEmail] = useState("");
@@ -19,20 +21,44 @@ function SignInForm() {
   const { Login } = useUserAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    try {
-      await Login(email, password);
-      navigate("/trainer/about");
-    } catch (err) {
-      setError(err.message);
-    }
+  const ErrMsg = (errMsg) => {
+    toast.error(errMsg, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
 
+  const handleSubmit = async (e) => {
+    if (email === "") {
+      ErrMsg("Fill the required fields!");
+    } else if (password === "") {
+      ErrMsg("Fill the required fields!");
+    } else {
+      try {
+        await Login(email, password);
+        navigate("/blogs");
+      } catch (error) {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        if (errorCode === "auth/wrong-password") {
+          ErrMsg("The password you entered is wrong.");
+        } else if (errorCode === "auth/user-not-found") {
+          ErrMsg("The entered email doesn`t have an email");
+        } else {
+          ErrMsg(errorMessage);
+        }
+      }
+    }
+  };
   return (
     <Grid container component="main" sx={{ height: "100vh" }}>
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <ToastContainer />
         <Box
           sx={{
             my: 8,
@@ -54,6 +80,7 @@ function SignInForm() {
               required
               fullWidth
               id="email"
+              type="email"
               label="Email"
               name="email"
               autoFocus
@@ -90,7 +117,7 @@ function SignInForm() {
               </Grid>
               <Grid item>
                 <Link href="/signUp" variant="body2">
-                  "Don't have an account? Sign Up"
+                  Don't have an account? Sign Up
                 </Link>
               </Grid>
             </Grid>
