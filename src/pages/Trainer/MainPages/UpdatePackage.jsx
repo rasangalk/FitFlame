@@ -5,19 +5,27 @@ import { useLocation, useNavigate } from "react-router-dom";
 import AppBarTrainer from "../../../components/Trainer/AppBarTrainer";
 import picture from "../../../images/personalTraining.webp";
 import { db } from "../../../firebase-config";
-import {
-  collection,
-  query,
-  where,
-  doc,
-  updateDoc,
-  getDocs,
-  deleteDoc,
-} from "firebase/firestore";
+import { doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 const UpdatePackage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
+  const ErrMsg = (errMsg) => {
+    toast.error(errMsg, {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
 
   const name = location.state.name;
   const duration = location.state.duration;
@@ -34,18 +42,43 @@ const UpdatePackage = () => {
   const updatePackage = async () => {
     // getting specific user document with user ID
     const packageDoc = doc(db, "packages", id);
-    const newFields = {
-      name: Name,
-      duration: Duration,
-      price: Price,
-      description: Description,
-    };
-    await updateDoc(packageDoc, newFields).then(navigate("/trainer/packages"));
+    if (Name === "") {
+      ErrMsg("Fields cannot be empty!");
+    } else if (Duration === "") {
+      ErrMsg("Fields cannot be empty!");
+    } else if (Description === "") {
+      ErrMsg("Fields cannot be empty!");
+    } else if (price === 0 || price === null) {
+      ErrMsg("Fields cannot be empty!");
+    } else {
+      const newFields = {
+        name: Name,
+        duration: Duration,
+        price: Price,
+        description: Description,
+      };
+      await updateDoc(packageDoc, newFields).then(
+        navigate("/trainer/packages")
+      );
+    }
   };
 
   const deletePackage = async () => {
     const packageDoc = doc(db, "packages", id);
-    await deleteDoc(packageDoc).then(navigate("/trainer/packages"));
+    confirmAlert({
+      message: "Are you sure to delete?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => {
+            deleteDoc(packageDoc).then(navigate("/trainer/packages"));
+          },
+        },
+        {
+          label: "No",
+        },
+      ],
+    });
   };
 
   return (
@@ -60,6 +93,7 @@ const UpdatePackage = () => {
           height: "80%",
         }}
       >
+        <ToastContainer />
         <Box
           sx={{
             margin: "5rem 5rem 1rem",
