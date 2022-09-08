@@ -68,6 +68,7 @@ const ProfileEdit = () => {
           picture: imagePreview,
           description: About,
         };
+
         await updateDoc(trainerDoc, newFields).then(
           navigate("/trainer/profile")
         );
@@ -97,9 +98,10 @@ const ProfileEdit = () => {
                 name: Name,
                 email: Email,
                 mobile: Mobile,
-                picture: url,
+
                 description: About,
               };
+
               updateDoc(trainerDoc, newFields).then(
                 navigate("/trainer/profile")
               );

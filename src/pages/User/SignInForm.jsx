@@ -24,7 +24,7 @@ function SignInForm() {
     setError("");
     try {
       await Login(email, password);
-      navigate("/orders");
+      navigate("/trainer/about");
     } catch (err) {
       setError(err.message);
     }
