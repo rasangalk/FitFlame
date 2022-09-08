@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Grid, Button } from "@mui/material";
+import { Box, Grid, Button, TextField } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import LoadingSpinner from "../../components/Admin/LoadingSpinner";
@@ -41,7 +41,7 @@ const BlogViewSubPage = () => {
       >
         <h1 sx={{ textTransform: "capitalize" }}>{blogData.title}</h1>
         <div>
-          <img src={imageURL} alt="demo" style={{ height: "200px" }} />
+          <img src={blogData.image} alt="demo" style={{ height: "200px" }} />
         </div>
         <Box
           sx={{
@@ -66,7 +66,17 @@ const BlogViewSubPage = () => {
             },
           }}
         >
-          <span>{blogData.content}</span>
+          <TextField
+            variant="standard"
+            fullWidth
+            multiline
+            label=""
+            id="Title"
+            value={blogData.content}
+            sx={{ textTransform: "capitalize" }}
+            readOnly
+            InputProps={{ disableUnderline: true }}
+          />
         </Box>
 
         <Grid container spacing={2} sx={{ mt: "0" }}>
@@ -89,6 +99,7 @@ const BlogViewSubPage = () => {
                 padding: "5px 36px",
               }}
               variant="contained"
+              onClick={() => navigate('/blog/update')}
             >
               edit
             </Button>

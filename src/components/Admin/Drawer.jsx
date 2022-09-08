@@ -13,6 +13,7 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import PeopleIcon from "@mui/icons-material/People";
 import { styled } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useUserAuth } from "../../Context/UserAuthContext";
 
 const DrawerWidth = 240;
 
@@ -22,8 +23,18 @@ const StyledBottomNavigation = styled(BottomNavigation)({
   bottom: 0,
 });
 export default function TemporaryDrawer() {
+  const { LogOut, user } = useUserAuth();
   const navigate = useNavigate();
+  const logOutNavigate = useNavigate();
 
+  const handleLogout = async () => {
+    try {
+      await LogOut();
+      logOutNavigate("/signin");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <Drawer
       variant="persistance"
@@ -56,7 +67,10 @@ export default function TemporaryDrawer() {
           ))}
         </List>
         <StyledBottomNavigation showLabels>
-          <BottomNavigationAction icon={<LogoutIcon />} />
+          <BottomNavigationAction
+            icon={<LogoutIcon />}
+            onClick={handleLogout}
+          />
         </StyledBottomNavigation>
       </Box>
     </Drawer>
