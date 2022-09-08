@@ -2,12 +2,8 @@ import {
   Box,
   Button,
   CardMedia,
-  FormControl,
   Grid,
   IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
   Tooltip,
   Typography,
@@ -25,6 +21,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { db } from "../../firebase-config";
 import ClearIcon from "@mui/icons-material/Clear";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import LoadingSpinner from "../../components/Client/LoadingSpinner";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
+
 import { v4 } from "uuid";
 
 function UpdateOrderSubPage() {
@@ -44,6 +44,7 @@ function UpdateOrderSubPage() {
   const [description, setDescription] = useState();
   const [checkImage, setCheckImage] = useState("");
   const [imageUpload, setImageUpload] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -82,53 +83,80 @@ function UpdateOrderSubPage() {
   }
 
   const updateOrder = async () => {
-    if (data.image === null) {
-      const IName = imageUpload.name + v4();
-      if (imageUpload == null) {
-        alert("No data");
-        return;
-      }
-      const imageRef = ref(storage, `images/${IName}`);
-      await uploadBytes(imageRef, imageUpload);
-      await updateDoc(orderDoc, {
-        weight: weight,
-        height: height,
-        description: description,
-        programme: programme,
-        goal: goal,
-        image: `${IName}`,
-      });
-    } else {
-      await updateDoc(orderDoc, {
-        weight: weight,
-        height: height,
-        description: description,
-        programme: programme,
-        goal: goal,
-      });
-    }
-
-    navigate("/orders");
+    confirmAlert({
+      message: "Are you sure to update this order?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => {
+            setIsLoading(true);
+            if (checkImage === null) {
+              const IName = imageUpload.name + v4();
+              if (imageUpload == null) {
+                alert("No data");
+                return;
+              }
+              const imageRef = ref(storage, `images/${IName}`);
+              uploadBytes(imageRef, imageUpload);
+              updateDoc(orderDoc, {
+                weight: weight,
+                height: height,
+                description: description,
+                programme: programme,
+                goal: goal,
+                image: `${IName}`,
+              }).then(navigate("/orders"));
+            } else {
+              updateDoc(orderDoc, {
+                weight: weight,
+                height: height,
+                description: description,
+                programme: programme,
+                goal: goal,
+              }).then(navigate("/orders"));
+            }
+          },
+        },
+        {
+          label: "No",
+          // onClick: () => alert("Click No")
+        },
+      ],
+    });
   };
 
   //Delete image for update
   const deleteImage = async () => {
-    const storage = getStorage();
-    const imageRef = ref(storage, `images/${checkImage}`);
-    // Delete the file
-    deleteObject(imageRef)
-      .then(
-        await updateDoc(orderDoc, {
-          image: null,
-        })
-      )
-      .then(setCheckImage(null))
-      .catch((error) => {
-        // Uh-oh, an error occurred!
-      });
+    confirmAlert({
+      message: "Are you sure to remove this image?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => {
+            const storage = getStorage();
+            const imageRef = ref(storage, `images/${checkImage}`);
+            // Delete the file
+            deleteObject(imageRef)
+              .then(
+                updateDoc(orderDoc, {
+                  image: null,
+                })
+              )
+              .then(setCheckImage(null))
+              .catch((error) => {
+                // Uh-oh, an error occurred!
+              });
+          },
+        },
+        {
+          label: "No",
+          // onClick: () => alert("Click No")
+        },
+      ],
+    });
   };
 
-  return (
+  const renderPage = (
     <Box
       p={0}
       sx={{
@@ -318,6 +346,8 @@ function UpdateOrderSubPage() {
       </Box>
     </Box>
   );
+
+  return <>{isLoading ? <LoadingSpinner message={""} /> : renderPage}</>;
 }
 
 export default UpdateOrderSubPage;

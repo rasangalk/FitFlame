@@ -5,6 +5,8 @@ import picture from "../../../images/personalTraining.webp";
 import { db } from "../../../firebase-config";
 import { addDoc, collection } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Createpackage = () => {
   const navigate = useNavigate();
@@ -12,10 +14,22 @@ const Createpackage = () => {
   const TrainerId = "5qO5w7dwRvzo3YeCoppe";
 
   const [Package, setPackage] = useState();
-  const [Duration, setDuration] = useState();
-  const [Price, setPrice] = useState();
-  const [Description, setDescription] = useState();
+  const [Duration, setDuration] = useState("");
+  const [Price, setPrice] = useState(null);
+  const [Description, setDescription] = useState("");
   const packageCollectionRef = collection(db, "packages");
+
+  const ErrMsg = (errMsg) => {
+    toast.error(errMsg, {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
 
   var today = new Date();
   // returns year as YY
@@ -54,14 +68,24 @@ const Createpackage = () => {
   const packageId = parseFloat(formatedDate);
 
   const createPackage = async () => {
-    await addDoc(packageCollectionRef, {
-      trainerId: TrainerId,
-      name: Package,
-      duration: Duration,
-      price: Price,
-      description: Description,
-      packageID: packageId,
-    }).then(navigate("/trainer/packages"));
+    if (Package === "") {
+      ErrMsg("Fill the required fields!");
+    } else if (Duration === "") {
+      ErrMsg("Fill the required fields!");
+    } else if (Price === 0 || Price === null) {
+      ErrMsg("Fill the required fields!");
+    } else if (Description === "") {
+      ErrMsg("Fill the required fields!");
+    } else {
+      await addDoc(packageCollectionRef, {
+        trainerId: TrainerId,
+        name: Package,
+        duration: Duration,
+        price: Price,
+        description: Description,
+        packageID: packageId,
+      }).then(navigate("/trainer/packages"));
+    }
   };
 
   return (
@@ -76,6 +100,7 @@ const Createpackage = () => {
           height: "80%",
         }}
       >
+        <ToastContainer />
         <Box
           sx={{
             margin: "5rem 5rem 1rem",
