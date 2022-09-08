@@ -6,11 +6,14 @@ import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import LoadingSpinner from "../../components/Admin/LoadingSpinner";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 import { v4 } from "uuid";
 import "./style.css";
 
 const BlogCreateSubPage = () => {
-  const [imageURL, setImageURL] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [imageUpload, setImageUpload] = useState(null);
@@ -21,6 +24,18 @@ const BlogCreateSubPage = () => {
 
   const navigate = useNavigate();
 
+  const ErrMsg = (errMsg) => {
+    toast.error(errMsg, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
   useEffect(() => {
     if (userNew) {
       const userID = JSON.parse(userNew);
@@ -28,33 +43,46 @@ const BlogCreateSubPage = () => {
     }
   }, [userNew]);
 
-  const handlePublish = async (e) => {
-    const IName = imageUpload.name + v4();
-
-    e.preventDefault();
-    setIsLoading(true);
-    try {
-      const imageRef = ref(storage, `BlogImages/${IName}`);
-      await uploadBytes(imageRef, imageUpload).then(() => {
-        getDownloadURL(imageRef).then((url) => {
-          addDoc(collection(db, "blogs"), {
-            title: title,
-            content: content,
-            author: data.name,
-            date: Timestamp.now(),
-            image: url,
-            blogID: Math.floor(10000 + Math.random() * 90000),
-          });
-        });
+  const handlePublish = (e) => {
+    if (title === null) {
+      ErrMsg("Please add an image!");
+    } else if (content === "") {
+      ErrMsg("Title field is required!");
+    } else if (imageUpload === "") {
+      ErrMsg("content field is required!");
+    } else {
+      const IName = imageUpload.name + v4();
+      confirmAlert({
+        message: "Are you sure to publish your article ?",
+        buttons: [
+          {
+            label: "Yes",
+            onClick: async () => {
+              try {
+                setIsLoading(true);
+                const imageRef = ref(storage, `BlogImages/${IName}`);
+                await uploadBytes(imageRef, imageUpload).then(() => {
+                  getDownloadURL(imageRef)
+                    .then((url) => {
+                      addDoc(collection(db, "blogs"), {
+                        title: title,
+                        content: content,
+                        author: data.name,
+                        date: Timestamp.now(),
+                        image: url,
+                        blogID: Math.floor(10000 + Math.random() * 90000),
+                      });
+                    })
+                    .then(() => navigate("/blog"));
+                });
+              } catch (err) {
+                alert(err);
+              }
+            },
+          },
+          { label: "No" },
+        ],
       });
-
-      if (imageUpload == null) {
-        alert("No data");
-        return;
-      }
-      navigate("/blog");
-    } catch (err) {
-      alert(err);
     }
   };
 
@@ -130,6 +158,7 @@ const BlogCreateSubPage = () => {
           </Button>
         </Grid>
       </Grid>
+      <ToastContainer />
     </Box>
   );
   return (

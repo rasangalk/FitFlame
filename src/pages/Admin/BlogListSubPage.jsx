@@ -22,6 +22,8 @@ import {
 } from "firebase/firestore";
 import { deleteObject, getStorage, ref } from "firebase/storage";
 import LoadingSpinner from "../../components/Admin/LoadingSpinner";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 const BlogListSubPage = () => {
   const navigate = useNavigate();
@@ -43,14 +45,25 @@ const BlogListSubPage = () => {
   }, []);
 
   const handleDelete = async (row) => {
-    const blogDoc = doc(db, "blogs", row.id);
+    confirmAlert({
+      message: "Are you sure to delete your blog ?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: async () => {
+            const blogDoc = doc(db, "blogs", row.id);
 
-    await deleteDoc(blogDoc);
+            await deleteDoc(blogDoc);
 
-    const storage = getStorage();
-    const imageRef = ref(storage, `BlogImages/${row.image}`);
-    deleteObject(imageRef);
-    window.location.reload(false);
+            const storage = getStorage();
+            const imageRef = ref(storage, `BlogImages/${row.image}`);
+            deleteObject(imageRef);
+            window.location.reload(false);
+          },
+        },
+        { label: "No" },
+      ],
+    });
   };
 
   const renderPage = (
