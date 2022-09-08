@@ -22,7 +22,6 @@ import {
 } from "firebase/firestore";
 import { deleteObject, getStorage, ref } from "firebase/storage";
 import LoadingSpinner from "../../components/Admin/LoadingSpinner";
-import { ConfirmProvider } from "material-ui-confirm";
 
 const BlogListSubPage = () => {
   const navigate = useNavigate();
