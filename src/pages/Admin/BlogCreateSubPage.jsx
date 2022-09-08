@@ -4,13 +4,13 @@ import { db, storage } from "../../firebase-config";
 import { Box, Grid, Button, TextField } from "@mui/material";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-import { ref, uploadBytes } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import LoadingSpinner from "../../components/Admin/LoadingSpinner";
 import { v4 } from "uuid";
 import "./style.css";
 
 const BlogCreateSubPage = () => {
-  const [url, setURL] = useState("");
+  const [imageURL, setImageURL] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [imageUpload, setImageUpload] = useState(null);
@@ -28,30 +28,30 @@ const BlogCreateSubPage = () => {
     }
   }, [userNew]);
 
-  console.log("create", data);
   const handlePublish = async (e) => {
     const IName = imageUpload.name + v4();
 
     e.preventDefault();
-
+    setIsLoading(true);
     try {
-      setIsLoading(true);
-      await addDoc(collection(db, "blogs"), {
-        title: title,
-        content: content,
-        url: url,
-        author: data.name,
-        date: Timestamp.now(),
-        image: `${IName}`,
-        blogID: Math.floor(10000 + Math.random() * 90000),
+      const imageRef = ref(storage, `BlogImages/${IName}`);
+      await uploadBytes(imageRef, imageUpload).then(() => {
+        getDownloadURL(imageRef).then((url) => {
+          addDoc(collection(db, "blogs"), {
+            title: title,
+            content: content,
+            author: data.name,
+            date: Timestamp.now(),
+            image: url,
+            blogID: Math.floor(10000 + Math.random() * 90000),
+          });
+        });
       });
 
       if (imageUpload == null) {
         alert("No data");
         return;
       }
-      const imageRef = ref(storage, `BlogImages/${IName}`);
-      await uploadBytes(imageRef, imageUpload);
       navigate("/blog");
     } catch (err) {
       alert(err);

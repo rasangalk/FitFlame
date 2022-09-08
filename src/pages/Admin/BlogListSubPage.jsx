@@ -22,7 +22,6 @@ import {
 } from "firebase/firestore";
 import { deleteObject, getStorage, ref } from "firebase/storage";
 import LoadingSpinner from "../../components/Admin/LoadingSpinner";
-import { ConfirmProvider } from "material-ui-confirm";
 
 const BlogListSubPage = () => {
   const navigate = useNavigate();
@@ -51,6 +50,7 @@ const BlogListSubPage = () => {
     const storage = getStorage();
     const imageRef = ref(storage, `BlogImages/${row.image}`);
     deleteObject(imageRef);
+    window.location.reload(false);
   };
 
   const renderPage = (
@@ -80,8 +80,8 @@ const BlogListSubPage = () => {
           },
         }}
       >
-        <Table sx={{ width: 1200, height: "max-content" }}>
-          <TableHead sx={{ width: 1200 }}>
+        <Table sx={{ width: "100%", height: "max-content" }}>
+          <TableHead sx={{ width: "90%" }}>
             <TableRow>
               <TableCell align="left">Title</TableCell>
               <TableCell align="left">Author</TableCell>
@@ -104,13 +104,18 @@ const BlogListSubPage = () => {
                       },
                     });
                   }}
+                  style={{ width: "55%" }}
                 >
                   {row.title}
                 </TableCell>
-                <TableCell style={{ width: 160 }} align="left">
+                <TableCell
+                  style={{ width: "20%" }}
+                  sx={{ textTransform: "capitalize" }}
+                  align="left"
+                >
                   {row.author}
                 </TableCell>
-                <TableCell style={{ width: 160 }} align="center">
+                <TableCell style={{ width: "15%" }} align="center">
                   {row.date
                     ? new Date(row.date.seconds * 1000).getDate() +
                       "/" +
@@ -119,7 +124,7 @@ const BlogListSubPage = () => {
                       new Date(row.date.seconds * 1000).getFullYear()
                     : null}
                 </TableCell>
-                <TableCell style={{ width: 160 }} align="center">
+                <TableCell style={{ width: "10%" }} align="center">
                   <DeleteIcon
                     onClick={() => {
                       handleDelete(row);
