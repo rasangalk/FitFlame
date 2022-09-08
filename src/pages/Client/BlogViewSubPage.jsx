@@ -77,11 +77,7 @@ function BlogViewSubPage() {
               }}
             >
               <Card sx={{ maxWidth: '100%' }}>
-                <CardMedia
-                  component='img'
-                  height='400'
-                  image='https://source.unsplash.com/random'
-                />
+                <CardMedia component='img' height='400' image={blogs.image} />
                 {/* <CardHeader>
                   <Typography color='textPrimary'></Typography>
                 </CardHeader> */}
