@@ -113,7 +113,7 @@ function BlogsSubPage() {
                         <CardMedia
                           component='img'
                           height='140'
-                          image='https://source.unsplash.com/random'
+                          image={blog.image}
                           alt='green iguana'
                         />
                         {/* <CardHeader>
