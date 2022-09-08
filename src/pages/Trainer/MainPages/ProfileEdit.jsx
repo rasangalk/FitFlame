@@ -7,6 +7,8 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { storage } from "./../../../firebase-config";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ProfileEdit = () => {
   const navigate = useNavigate();
@@ -20,6 +22,18 @@ const ProfileEdit = () => {
   const [About, setAbout] = useState();
 
   const trainerRef = doc(db, "users", "5qO5w7dwRvzo3YeCoppe");
+
+  const ErrMsg = (errMsg) => {
+    toast.error(errMsg, {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
 
   useEffect(() => {
     getDoc(trainerRef).then((doc) => {
@@ -35,47 +49,49 @@ const ProfileEdit = () => {
     const trainerDoc = doc(db, "users", "5qO5w7dwRvzo3YeCoppe");
 
     if (selected === "" && imagePreview === null) {
-      console.log("Please choose a cover image");
+      ErrMsg("Please choose a cover image");
     } else if (selected === "" && imagePreview !== "") {
       /* this section handles if the user does not modify the image but other text fields*/
       if (Name === "") {
-        console.log("Please fill the required fields!");
+        ErrMsg("Please fill the required fields!");
       } else if (Email === "") {
-        console.log("Please fill the required fields!");
+        ErrMsg("Please fill the required fields!");
       } else if (Mobile === "") {
-        console.log("Please select an album category!");
+        ErrMsg("Please select an album category!");
       } else if (About === "") {
-        console.log("Please fill the required fields!");
+        ErrMsg("Please fill the required fields!");
       } else {
         const newFields = {
           name: Name,
           email: Email,
           mobile: Mobile,
-          CoverURL: imagePreview,
+          picture: imagePreview,
           description: About,
         };
-        await updateDoc(trainerDoc, newFields).then(navigate("/"));
+        await updateDoc(trainerDoc, newFields).then(
+          navigate("/trainer/profile")
+        );
       }
     } else if (selected !== "" && imagePreview === null) {
-      console.log("Something wrong with the image preview");
+      ErrMsg("Something wrong with the image preview");
     } else {
       //handle image upload and then update the document
       const imageRef = ref(storage, `TrainerProfile/${selected.name}`);
       if (selected === "") {
-        console.log("Cover image must be added!");
+        ErrMsg("Cover image must be added!");
       } else {
         uploadBytes(imageRef, selected).then(() => {
           getDownloadURL(imageRef).then((url) => {
             if (Name === "") {
-              console.log("Fill the required fields!");
+              ErrMsg("Fill the required fields!");
             } else if (url === "") {
-              console.log("Cover URL Error!");
+              ErrMsg("Cover URL Error!");
             } else if (Email === "") {
-              console.log("Fill the required fields!");
+              ErrMsg("Fill the required fields!");
             } else if (Mobile === "") {
-              console.log("Please select an album category!");
+              ErrMsg("Please select an album category!");
             } else if (About === "") {
-              console.log("Fill the required fields!");
+              ErrMsg("Fill the required fields!");
             } else {
               const newFields = {
                 name: Name,
@@ -84,7 +100,9 @@ const ProfileEdit = () => {
                 picture: url,
                 description: About,
               };
-              updateDoc(trainerDoc, newFields).then(navigate("/"));
+              updateDoc(trainerDoc, newFields).then(
+                navigate("/trainer/profile")
+              );
             }
           });
         });
@@ -103,12 +121,13 @@ const ProfileEdit = () => {
       };
       reader.readAsDataURL(selected);
     } else {
-      console.log("File type is not supported!");
+      ErrMsg("File type is not supported!");
     }
   };
   return (
     <Box sx={{ height: "100vh" }}>
       <AppBarTrainer trainerName="Hi, Randy!" />
+      <ToastContainer />
 
       <Box
         sx={{
