@@ -149,8 +149,7 @@ const AppBarTrainer = ({ trainerName }) => {
           horizontal: "right",
         }}
       >
-        <MenuItem //onClick={handleClose}
-        >
+        <MenuItem onClick={() => navigate("/trainer/profile")}>
           Profile
         </MenuItem>
         <MenuItem //onClick={handleClose}
