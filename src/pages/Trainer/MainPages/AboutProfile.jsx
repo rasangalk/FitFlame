@@ -41,11 +41,13 @@ const AboutProfile = () => {
     } else if (selected === "") {
       ErrMsg("Image error!");
     } else {
-      uploadBytes(imageRef, selected).then(() => {
-        getDownloadURL(imageRef).then((url) => {
-          setImageURL(url);
-        });
-      });
+      uploadBytes(imageRef, selected)
+        .then(() => {
+          getDownloadURL(imageRef).then((url) => {
+            updateDoc(userDoc, { picture: url });
+          });
+        })
+        .then();
 
       const newFields = {
         description: About,
