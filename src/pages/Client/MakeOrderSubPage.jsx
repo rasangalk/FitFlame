@@ -86,7 +86,7 @@ function MakeOrderSubPage() {
                 trainerId: trainerId,
                 date: currentDate,
                 clientId: data.user,
-                clientName: data.name,
+                clinetName: data.name,
                 email: data.email,
                 phone: data.mobile,
                 status: "pending",

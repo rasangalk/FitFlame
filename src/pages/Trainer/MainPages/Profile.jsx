@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import AppBarTrainer from "../../../components/Trainer/AppBarTrainer";
 import { db } from "../../../firebase-config";
 import { doc, getDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const [Name, setName] = useState();
@@ -10,6 +11,8 @@ const Profile = () => {
   const [Mobile, setMobile] = useState();
   const [About, setAbout] = useState();
   const [ImageUrl, setImageUrl] = useState();
+
+  const navigate = useNavigate();
 
   const trainerRef = doc(db, "users", "5qO5w7dwRvzo3YeCoppe");
 
@@ -146,6 +149,7 @@ const Profile = () => {
                     marginTop: "3rem",
                   }}
                   variant="contained"
+                  onClick={() => navigate("/trainer/profile-edit")}
                 >
                   edit
                 </Button>
