@@ -120,7 +120,7 @@ function TrainersSubPage() {
             >
               <Box sx={{}}>
                 {users.map((user) =>
-                  user.role === "trainer" ? (
+                  user.role === "Trainer" ? (
                     <Card
                       sx={{
                         maxWidth: "100%",
@@ -171,7 +171,11 @@ function TrainersSubPage() {
                                 bottom: 9,
                               }}
                             >
-                              <Rating name="read-only" value={value} readOnly />
+                              <Rating
+                                name="read-only"
+                                value={user.rate}
+                                readOnly
+                              />
                             </Box>
                           </CardContent>
                         </Grid>
