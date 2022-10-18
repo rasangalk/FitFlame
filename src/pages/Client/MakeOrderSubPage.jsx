@@ -143,7 +143,7 @@ function MakeOrderSubPage() {
                 <TextField
                   required
                   id="outlined-basic"
-                  label="name"
+                  label="Name"
                   variant="outlined"
                   InputLabelProps={{ shrink: true }}
                   value={data.name}
@@ -154,7 +154,7 @@ function MakeOrderSubPage() {
                 <TextField
                   required
                   id="outlined-basic"
-                  label="age"
+                  label="Age"
                   variant="outlined"
                   sx={{ width: "100%" }}
                   InputLabelProps={{ shrink: true }}
@@ -169,7 +169,7 @@ function MakeOrderSubPage() {
                 <TextField
                   required
                   id="outlined-basic"
-                  label="weight(kg)"
+                  label="Weight(kg)"
                   variant="outlined"
                   type="number"
                   sx={{ width: "100%" }}
@@ -182,7 +182,7 @@ function MakeOrderSubPage() {
                 <TextField
                   required
                   id="outlined-basic"
-                  label="height(cm)"
+                  label="Height(cm)"
                   variant="outlined"
                   type="number"
                   sx={{ width: "100%" }}
@@ -199,7 +199,7 @@ function MakeOrderSubPage() {
                 <TextField
                   required
                   id="outlined-basic"
-                  label="goal"
+                  label="Goal"
                   variant="outlined"
                   sx={{ width: "100%" }}
                   onChange={(e) => {
@@ -211,7 +211,7 @@ function MakeOrderSubPage() {
                 <TextField
                   required
                   id="outlined-basic"
-                  label="programme"
+                  label="Programme"
                   variant="outlined"
                   sx={{ width: "100%" }}
                   value={selectedProgramme}
@@ -280,7 +280,11 @@ function MakeOrderSubPage() {
         <Box sx={{ padding: 4, position: "absolute", bottom: 0 }}>
           <Grid container spacing={1}>
             <Grid item>
-              <Button variant="contained" sx={{ background: "#2A3036" }}>
+              <Button
+                variant="contained"
+                sx={{ background: "#2A3036" }}
+                onClick={() => navigate(-1)}
+              >
                 Cancel
               </Button>
             </Grid>
