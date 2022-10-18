@@ -1,12 +1,7 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  Grid,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import "./style.css";
@@ -14,13 +9,16 @@ import { addDoc, collection } from "firebase/firestore";
 import { v4 } from "uuid";
 import { db, storage } from "../../firebase-config";
 import { ref, uploadBytes } from "firebase/storage";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import LoadingSpinner from "../../components/Client/LoadingSpinner";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function MakeOrderSubPage() {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const userNew = useSelector((state) => state.setUserData.userData);
-
-  console.log("Mul eka", userNew);
 
   const current = new Date();
   const currentDate = `${current.getDate()}/${
@@ -37,60 +35,90 @@ function MakeOrderSubPage() {
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [goal, setGoal] = useState("");
-  // const [programme, setProgramme] = useState("");
-  const [description, setDescription] = useState();
-  const [imageUpload, setImageUpload] = useState(null);
+  const [description, setDescription] = useState("");
+  const [imageUpload, setImageUpload] = useState("nothing");
 
   const usersCollectionRef = collection(db, "orders");
 
+  const ErrMsg = (errMsg) => {
+    toast.error(errMsg, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
+  console.log("This is data what i need", data);
   const createOrder = async () => {
     const IName = imageUpload.name + v4();
-    await addDoc(usersCollectionRef, {
-      weight: Number(weight),
-      height: Number(height),
-      goal: goal,
-      description: description,
-      programme: selectedProgramme,
-      image: `${IName}`,
-      trainerName: trainerName,
-      trainerMobile: trainerMobile,
-      trainerEmail: trainerEmail,
-      trainerId: trainerId,
-      date: currentDate,
-      clientId: data.user,
-      status: "pending",
-      orderId: Math.floor(1000 + Math.random() * 9000),
-    });
-
-    if (imageUpload == null) {
-      alert("No data");
-      return;
+    if (weight === "") {
+      ErrMsg("Weight field is required!");
+    } else if (height === "") {
+      ErrMsg("Height field is required!");
+    } else if (goal === "") {
+      ErrMsg("Goal field is required!");
+    } else if (description === "") {
+      ErrMsg("Description field is required!");
+    } else if (imageUpload === "nothing") {
+      ErrMsg("Please Upload a image!");
+    } else {
+      confirmAlert({
+        message: "Are you sure to confirm this order ?",
+        // message: "Are you sure to do this.",
+        buttons: [
+          {
+            label: "Yes",
+            onClick: () => {
+              addDoc(usersCollectionRef, {
+                weight: Number(weight),
+                height: Number(height),
+                goal: goal,
+                description: description,
+                programme: selectedProgramme,
+                image: `${IName}`,
+                trainerName: trainerName,
+                trainerMobile: trainerMobile,
+                trainerEmail: trainerEmail,
+                trainerId: trainerId,
+                date: currentDate,
+                clientId: data.user,
+                clientName: data.name,
+                email: data.email,
+                phone: data.mobile,
+                status: "pending",
+                orderId: Math.floor(1000 + Math.random() * 9000),
+              });
+              setIsLoading(true);
+              if (imageUpload == null) {
+                alert("No data");
+                return;
+              }
+              const imageRef = ref(storage, `images/${IName}`);
+              uploadBytes(imageRef, imageUpload);
+              navigate("/trainers");
+            },
+          },
+          {
+            label: "No",
+            // onClick: () => alert("Click No")
+          },
+        ],
+      });
     }
-    const imageRef = ref(storage, `images/${IName}`);
-    await uploadBytes(imageRef, imageUpload);
-    window.location.reload(false);
   };
 
   useEffect(() => {
     if (userNew) {
       const userID = JSON.parse(userNew);
       setData(userID);
-      // console.log("User IDDDDDD", userID.user);
-      // async function fetchData() {
-      //   const userDoc = doc(db, "users", userID);
-      //   const docSnap = await getDoc(userDoc);
-
-      // const trainerDoc = doc(db, "users", trainerId);
-      // const trainerDocSnap = await getDoc(trainerDoc);
-      // setTrainerData(trainerDocSnap.data());
-      // }
-      // fetchData();
     }
   }, [userNew]);
 
-  console.log("User IDDDDDD", data);
-
-  return (
+  const renderPage = (
     <Box
       p={0}
       sx={{
@@ -115,28 +143,22 @@ function MakeOrderSubPage() {
                 <TextField
                   required
                   id="outlined-basic"
-                  label="name"
+                  label="Name"
                   variant="outlined"
                   InputLabelProps={{ shrink: true }}
                   value={data.name}
                   sx={{ width: "100%" }}
-                  // onChange={(e) => {
-                  //   setWeight(e.target.value);
-                  // }}
                 />
               </Grid>
               <Grid item xs={6}>
                 <TextField
                   required
                   id="outlined-basic"
-                  label="age"
+                  label="Age"
                   variant="outlined"
                   sx={{ width: "100%" }}
                   InputLabelProps={{ shrink: true }}
                   value={data.age}
-                  // onChange={(e) => {
-                  //   setHeight(e.target.value);
-                  // }}
                 />
               </Grid>
             </Grid>
@@ -147,7 +169,7 @@ function MakeOrderSubPage() {
                 <TextField
                   required
                   id="outlined-basic"
-                  label="weight(kg)"
+                  label="Weight(kg)"
                   variant="outlined"
                   type="number"
                   sx={{ width: "100%" }}
@@ -160,7 +182,7 @@ function MakeOrderSubPage() {
                 <TextField
                   required
                   id="outlined-basic"
-                  label="height(cm)"
+                  label="Height(cm)"
                   variant="outlined"
                   type="number"
                   sx={{ width: "100%" }}
@@ -177,7 +199,7 @@ function MakeOrderSubPage() {
                 <TextField
                   required
                   id="outlined-basic"
-                  label="goal"
+                  label="Goal"
                   variant="outlined"
                   sx={{ width: "100%" }}
                   onChange={(e) => {
@@ -189,7 +211,7 @@ function MakeOrderSubPage() {
                 <TextField
                   required
                   id="outlined-basic"
-                  label="programme"
+                  label="Programme"
                   variant="outlined"
                   sx={{ width: "100%" }}
                   value={selectedProgramme}
@@ -234,7 +256,7 @@ function MakeOrderSubPage() {
                 </Grid>
                 <Grid item>
                   <Typography variant="h7" sx={{ fontSize: "11px" }}>
-                    Upload some of your recent images
+                    Upload some of your recent image
                   </Typography>
                 </Grid>
               </Grid>
@@ -258,7 +280,11 @@ function MakeOrderSubPage() {
         <Box sx={{ padding: 4, position: "absolute", bottom: 0 }}>
           <Grid container spacing={1}>
             <Grid item>
-              <Button variant="contained" sx={{ background: "#2A3036" }}>
+              <Button
+                variant="contained"
+                sx={{ background: "#2A3036" }}
+                onClick={() => navigate(-1)}
+              >
                 Cancel
               </Button>
             </Grid>
@@ -274,8 +300,11 @@ function MakeOrderSubPage() {
           </Grid>
         </Box>
       </Box>
+      <ToastContainer />
     </Box>
   );
+
+  return <> {isLoading ? <LoadingSpinner message={""} /> : renderPage}</>;
 }
 
 export default MakeOrderSubPage;

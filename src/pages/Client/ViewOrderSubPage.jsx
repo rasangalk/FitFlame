@@ -9,6 +9,8 @@ import {
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { db } from "../../firebase-config";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 function ViewOrderSubPage() {
   const navigate = useNavigate();
@@ -40,16 +42,30 @@ function ViewOrderSubPage() {
 
   //Delete the order if not proceeded
   const deleteOrder = async (id) => {
-    const userDoc = doc(db, "orders", id);
-    await deleteDoc(userDoc);
+    confirmAlert({
+      message: "Are you sure to delete this order ?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => {
+            const userDoc = doc(db, "orders", id);
+            deleteDoc(userDoc);
 
-    const storage = getStorage();
-    const imageRef = ref(storage, `images/${data.image}`);
-    // Delete the file
-    deleteObject(imageRef).catch((error) => {
-      // Uh-oh, an error occurred!
+            const storage = getStorage();
+            const imageRef = ref(storage, `images/${data.image}`);
+            // Delete the file
+            deleteObject(imageRef).catch((error) => {
+              // Uh-oh, an error occurred!
+            });
+            navigate("/orders");
+          },
+        },
+        {
+          label: "No",
+          // onClick: () => alert("Click No")
+        },
+      ],
     });
-    navigate("/orders");
   };
 
   return (

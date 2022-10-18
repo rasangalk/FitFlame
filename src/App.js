@@ -39,6 +39,7 @@ import AdminUserList from "./pages/Admin/MainPages/AdminUserList";
 import BlogUpdate from "./pages/Admin/MainPages/BlogUpdate";
 import BlogViewAdmin from "./pages/Admin/MainPages/BlogView";
 import BlogCreate from "./pages/Admin/MainPages/BlogCreate";
+import WorkoutScheduleReport from "./pages/Client/Main-Pages/Workout-Schedule-Report";
 
 export function App() {
   const dispatch = useDispatch();
@@ -156,6 +157,10 @@ export function App() {
                 <ClientProfileUpdate />
               </ProtectedRoute>
             }
+          />
+          <Route
+            path="/client-workout-schedule-report"
+            element={<WorkoutScheduleReport />}
           />
 
           {/* Chamod */}

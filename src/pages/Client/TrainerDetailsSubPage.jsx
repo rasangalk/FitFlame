@@ -122,7 +122,7 @@ function TrainerDetailsSubPage() {
               aria-readonly
               rows={3}
               value={data.description}
-              inputProps={{ readOnly: true }}
+              inputProps={{ readOnly: true, disableUnderline: true }}
               InputLabelProps={{ shrink: true }}
             />
           </Box>
