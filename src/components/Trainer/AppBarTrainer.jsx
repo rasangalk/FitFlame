@@ -24,9 +24,21 @@ import {
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUserAuth } from "../../Context/UserAuthContext";
 
 const AppBarTrainer = ({ trainerName }) => {
   const navigate = useNavigate();
+  const { LogOut, user } = useUserAuth();
+
+  const handleLogout = async () => {
+    try{
+      await LogOut();
+      navigate("/signin");
+    }catch(err){
+      console.log(err.message);
+    }
+
+  }
 
   const [state, setState] = useState({
     left: false,
@@ -152,7 +164,7 @@ const AppBarTrainer = ({ trainerName }) => {
         <MenuItem onClick={() => navigate("/trainer/profile")}>
           Profile
         </MenuItem>
-        <MenuItem //onClick={handleClose}
+        <MenuItem onClick={handleLogout}
         >
           Logout
         </MenuItem>
