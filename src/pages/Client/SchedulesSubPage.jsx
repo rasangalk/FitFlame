@@ -67,7 +67,7 @@ function SchedulesSubPage() {
                   variant="h8"
                   sx={{ fontWeight: "bold", fontSize: "17.5px" }}
                 >
-                  Meal Plan
+                  Workout Schedule
                 </Typography>
               </Box>
               <Box
