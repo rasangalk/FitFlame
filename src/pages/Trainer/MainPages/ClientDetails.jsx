@@ -109,14 +109,13 @@ const ClientDetails = () => {
             justifyContent: 'space-between',
           }}
         >
-          <ToastContainer />
-
           <Typography
             variant='h4'
             sx={{ color: '#2A3036', fontWeight: '400', marginBottom: '5rem' }}
           >
-            Order Details
+            Client Details
           </Typography>
+          <ToastContainer />
         </Box>
         <Box sx={{ marginBottom: '4rem' }}>
           <TableContainer component={Paper} sx={{ boxShadow: 0 }}>
