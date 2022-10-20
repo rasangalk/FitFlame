@@ -1,14 +1,14 @@
-import { Close } from "@mui/icons-material";
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import AppBarTrainer from "../../../components/Trainer/AppBarTrainer";
-import { db } from "../../../firebase-config";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { storage } from "./../../../firebase-config";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Close } from '@mui/icons-material';
+import { Box, Button, Grid, TextField, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import AppBarTrainer from '../../../components/Trainer/AppBarTrainer';
+import { db } from '../../../firebase-config';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { storage } from './../../../firebase-config';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProfileEdit = () => {
   const navigate = useNavigate();
@@ -21,11 +21,11 @@ const ProfileEdit = () => {
   const [Mobile, setMobile] = useState();
   const [About, setAbout] = useState();
 
-  const trainerRef = doc(db, "users", "5qO5w7dwRvzo3YeCoppe");
+  const trainerRef = doc(db, 'users', '5qO5w7dwRvzo3YeCoppe');
 
   const ErrMsg = (errMsg) => {
     toast.error(errMsg, {
-      position: "top-right",
+      position: 'top-right',
       autoClose: 1000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -46,20 +46,20 @@ const ProfileEdit = () => {
   }, []);
 
   const updateProfile = async () => {
-    const trainerDoc = doc(db, "users", "5qO5w7dwRvzo3YeCoppe");
+    const trainerDoc = doc(db, 'users', '5qO5w7dwRvzo3YeCoppe');
 
-    if (selected === "" && imagePreview === null) {
-      ErrMsg("Please choose a cover image");
-    } else if (selected === "" && imagePreview !== "") {
+    if (selected === '' && imagePreview === null) {
+      ErrMsg('Please choose a cover image');
+    } else if (selected === '' && imagePreview !== '') {
       /* this section handles if the user does not modify the image but other text fields*/
-      if (Name === "") {
-        ErrMsg("Please fill the required fields!");
-      } else if (Email === "") {
-        ErrMsg("Please fill the required fields!");
-      } else if (Mobile === "") {
-        ErrMsg("Please select an album category!");
-      } else if (About === "") {
-        ErrMsg("Please fill the required fields!");
+      if (Name === '') {
+        ErrMsg('Please fill the required fields!');
+      } else if (Email === '') {
+        ErrMsg('Please fill the required fields!');
+      } else if (Mobile === '') {
+        ErrMsg('Please select an album category!');
+      } else if (About === '') {
+        ErrMsg('Please fill the required fields!');
       } else {
         const newFields = {
           name: Name,
@@ -70,29 +70,29 @@ const ProfileEdit = () => {
         };
 
         await updateDoc(trainerDoc, newFields).then(
-          navigate("/trainer/profile")
+          navigate('/trainer/profile')
         );
       }
-    } else if (selected !== "" && imagePreview === null) {
-      ErrMsg("Something wrong with the image preview");
+    } else if (selected !== '' && imagePreview === null) {
+      ErrMsg('Something wrong with the image preview');
     } else {
       //handle image upload and then update the document
       const imageRef = ref(storage, `TrainerProfile/${selected.name}`);
-      if (selected === "") {
-        ErrMsg("Cover image must be added!");
+      if (selected === '') {
+        ErrMsg('Cover image must be added!');
       } else {
         uploadBytes(imageRef, selected).then(() => {
           getDownloadURL(imageRef).then((url) => {
-            if (Name === "") {
-              ErrMsg("Fill the required fields!");
-            } else if (url === "") {
-              ErrMsg("Cover URL Error!");
-            } else if (Email === "") {
-              ErrMsg("Fill the required fields!");
-            } else if (Mobile === "") {
-              ErrMsg("Please select an album category!");
-            } else if (About === "") {
-              ErrMsg("Fill the required fields!");
+            if (Name === '') {
+              ErrMsg('Fill the required fields!');
+            } else if (url === '') {
+              ErrMsg('Cover URL Error!');
+            } else if (Email === '') {
+              ErrMsg('Fill the required fields!');
+            } else if (Mobile === '') {
+              ErrMsg('Please select an album category!');
+            } else if (About === '') {
+              ErrMsg('Fill the required fields!');
             } else {
               const newFields = {
                 name: Name,
@@ -103,7 +103,7 @@ const ProfileEdit = () => {
               };
 
               updateDoc(trainerDoc, newFields).then(
-                navigate("/trainer/profile")
+                navigate('/trainer/profile')
               );
             }
           });
@@ -115,7 +115,7 @@ const ProfileEdit = () => {
   const handleImageChange = (e) => {
     const selected = e.target.files[0];
     setSelected(selected);
-    const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/jpg"];
+    const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/jpg'];
     if (selected && ALLOWED_TYPES.includes(selected.type)) {
       let reader = new FileReader();
       reader.onloadend = () => {
@@ -123,35 +123,35 @@ const ProfileEdit = () => {
       };
       reader.readAsDataURL(selected);
     } else {
-      ErrMsg("File type is not supported!");
+      ErrMsg('File type is not supported!');
     }
   };
   return (
-    <Box sx={{ height: "100vh" }}>
-      <AppBarTrainer trainerName="Hi, Randy!" />
+    <Box sx={{ height: '100vh' }}>
+      <AppBarTrainer trainerName='Hi, Randy!' />
       <ToastContainer />
 
       <Box
         sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "80%",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '80%',
         }}
       >
         <Box
           sx={{
-            margin: "5rem 5rem 1rem",
-            backgroundColor: "#F4F3F8",
-            borderRadius: "1.5rem",
+            margin: '5rem 5rem 1rem',
+            backgroundColor: '#F4F3F8',
+            borderRadius: '1.5rem',
             boxShadow: 12,
-            width: "100%",
+            width: '100%',
           }}
         >
           <Box
             sx={{
-              width: "100%",
-              padding: "2rem 4rem",
+              width: '100%',
+              padding: '2rem 4rem',
             }}
           >
             <Grid container spacing={2}>
@@ -159,36 +159,36 @@ const ProfileEdit = () => {
                 item
                 xs={6}
                 sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
                 <Box
                   sx={{
-                    borderRadius: "50%",
-                    height: "300px",
-                    width: "300px",
-                    display: "flex",
-                    alignItems: "center",
-                    textAlign: "center",
-                    justifyContent: "center",
-                    marginTop: "4rem",
-                    marginBottom: "1rem",
+                    borderRadius: '50%',
+                    height: '300px',
+                    width: '300px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    justifyContent: 'center',
+                    marginTop: '4rem',
+                    marginBottom: '1rem',
                     background: imagePreview
                       ? `url("${imagePreview}")no-repeat center/cover`
-                      : "#D9D9D9",
+                      : '#D9D9D9',
                   }}
                 >
                   {!imagePreview && (
                     <>
-                      <label htmlFor="fileUpload">Choose Cover</label>
+                      <label htmlFor='fileUpload'>Choose Cover</label>
                       <input
-                        type="file"
-                        id="fileUpload"
+                        type='file'
+                        id='fileUpload'
                         onChange={handleImageChange}
-                        style={{ display: "none" }}
+                        style={{ display: 'none' }}
                       />
                     </>
                   )}
@@ -196,10 +196,10 @@ const ProfileEdit = () => {
                 {imagePreview && (
                   <>
                     <Close
-                      sx={{ cursor: "pointer" }}
+                      sx={{ cursor: 'pointer' }}
                       onClick={() => {
                         setImagePreview(null);
-                        setSelected("");
+                        setSelected('');
                       }}
                     />
                   </>
@@ -210,47 +210,47 @@ const ProfileEdit = () => {
                 item
                 xs={6}
                 sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
                 }}
               >
-                <Typography variant="h4" sx={{ fontWeight: 500 }}>
-                  <span style={{ color: "#3C56F5" }}>About</span> Me,
+                <Typography variant='h4' sx={{ fontWeight: 500 }}>
+                  <span style={{ color: '#3C56F5' }}>About</span> Me,
                 </Typography>
                 <TextField
-                  sx={{ width: "100%", marginTop: "3rem" }}
-                  id="outlined-basic"
-                  label="Name"
-                  variant="outlined"
+                  sx={{ width: '100%', marginTop: '3rem' }}
+                  id='outlined-basic'
+                  label='Name'
+                  variant='outlined'
                   value={Name}
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => setName(e.target.value)}
                 />
-                <Box sx={{ display: "flex", gap: 2, width: "100%" }}>
+                <Box sx={{ display: 'flex', gap: 2, width: '100%' }}>
                   <TextField
-                    sx={{ width: "100%", marginTop: "3rem" }}
-                    id="outlined-basic"
-                    label="Email"
-                    variant="outlined"
+                    sx={{ width: '100%', marginTop: '3rem' }}
+                    id='outlined-basic'
+                    label='Email'
+                    variant='outlined'
                     value={Email}
                     InputLabelProps={{ shrink: true }}
                     onChange={(e) => setEmail(e.target.value)}
                   />
                   <TextField
-                    sx={{ width: "100%", marginTop: "3rem" }}
-                    id="outlined-basic"
-                    label="Mobile"
-                    variant="outlined"
-                    value={"0" + Mobile}
+                    sx={{ width: '100%', marginTop: '3rem' }}
+                    id='outlined-basic'
+                    label='Mobile'
+                    variant='outlined'
+                    value={Mobile}
                     InputLabelProps={{ shrink: true }}
                     onChange={(e) => setMobile(e.target.value)}
                   />
                 </Box>
                 <TextField
-                  sx={{ width: "100%", marginTop: "3rem" }}
-                  id="outlined-multiline-static"
-                  label="About"
+                  sx={{ width: '100%', marginTop: '3rem' }}
+                  id='outlined-multiline-static'
+                  label='About'
                   multiline
                   rows={5}
                   value={About}
@@ -259,12 +259,12 @@ const ProfileEdit = () => {
                 />
                 <Button
                   sx={{
-                    height: "40px",
-                    width: "100%",
-                    backgroundColor: "#3C56F5",
-                    marginTop: "3rem",
+                    height: '40px',
+                    width: '100%',
+                    backgroundColor: '#3C56F5',
+                    marginTop: '3rem',
                   }}
-                  variant="contained"
+                  variant='contained'
                   onClick={updateProfile}
                 >
                   update
