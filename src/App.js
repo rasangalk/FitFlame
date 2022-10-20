@@ -1,4 +1,3 @@
-
 import { CssBaseline } from '@mui/material';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Blogs from './pages/Client/Main-Pages/Blogs';
@@ -40,8 +39,7 @@ import AdminUserList from './pages/Admin/MainPages/AdminUserList';
 import BlogUpdate from './pages/Admin/MainPages/BlogUpdate';
 import BlogViewAdmin from './pages/Admin/MainPages/BlogView';
 import BlogCreate from './pages/Admin/MainPages/BlogCreate';
-import WorkoutScheduleReport from "./pages/Client/Main-Pages/Workout-Schedule-Report";
-
+import WorkoutScheduleReport from './pages/Client/Main-Pages/Workout-Schedule-Report';
 
 export function App() {
   const dispatch = useDispatch();
@@ -161,7 +159,7 @@ export function App() {
             }
           />
           <Route
-            path="/client-workout-schedule-report"
+            path='/client-workout-schedule-report'
             element={<WorkoutScheduleReport />}
           />
 
