@@ -7,6 +7,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -122,9 +123,13 @@ function OrdersSubPage() {
                       <TableCell align="right">{row.date}</TableCell>
                       <TableCell align="right">
                         {row.status === "pending" ? (
-                          <CheckCircleOutlineRoundedIcon />
+                          <Tooltip title="Pending">
+                            <CheckCircleOutlineRoundedIcon />
+                          </Tooltip>
                         ) : (
-                          <CheckCircleRoundedIcon />
+                          <Tooltip title="Accepted">
+                            <CheckCircleRoundedIcon />
+                          </Tooltip>
                         )}
                       </TableCell>
                     </TableRow>
