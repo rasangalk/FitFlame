@@ -5,9 +5,10 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
-import { collection, getDocs, query, where } from '@firebase/firestore'
-import { getDB } from '../../firebase-config'
+import { collection, getDoc, query, where, doc } from '@firebase/firestore'
+import { db, getDB } from '../../firebase-config'
 import { getAuth } from '@firebase/auth'
+import { useNavigate } from 'react-router-dom'
 
 function ClientProfileSubPage() {
   // const auth = getAuth()
@@ -42,6 +43,24 @@ function ClientProfileSubPage() {
   //   fetchTasks()
   // }, [user])
 
+  const [Name, setName] = useState()
+  const [Email, setEmail] = useState()
+  const [Mobile, setMobile] = useState()
+  const [ImageUrl, setImageUrl] = useState()
+
+  const navigate = useNavigate()
+
+  const cleintRef = doc(db, 'users', 'hu4UOB1AzEbinu2bEtsJ')
+
+  useEffect(() => {
+    getDoc(cleintRef).then((doc) => {
+      setName(doc.data().name)
+      setEmail(doc.data().email)
+      setMobile(doc.data().mobile)
+      setImageUrl(doc.data().picture)
+    })
+  }, [])
+
   return (
     <Box
       p={0}
@@ -62,19 +81,36 @@ function ClientProfileSubPage() {
         }}
       >
         <Grid container sx={{ height: '90h' }}>
-          <Grid item xs={12} sm={4} md={7}>
+          <Grid
+            item
+            xs={6}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
             <Box
               sx={{
-                my: 18,
+                borderRadius: '50%',
+                height: '300px',
+                width: '300px',
                 display: 'flex',
-                flexDirection: 'column',
                 alignItems: 'center',
+                textAlign: 'center',
+                justifyContent: 'center',
+                marginTop: '4rem',
+                marginBottom: '1rem',
+                background: ImageUrl
+                  ? `url("${ImageUrl}")no-repeat center/cover`
+                  : '#D9D9D9',
               }}
             >
-              <Avatar
+              {/* <Avatar
                 src='https://source.unsplash.com/oZEkYLYxzKI'
                 sx={{ width: 256, height: 256 }}
-              ></Avatar>
+              ></Avatar> */}
             </Box>
           </Grid>
           <Grid item xs={12} sm={8} md={5}>
@@ -97,6 +133,8 @@ function ClientProfileSubPage() {
                       fullWidth
                       id='name'
                       label='Name'
+                      value={Name}
+                      InputLabelProps={{ shrink: true }}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -107,6 +145,8 @@ function ClientProfileSubPage() {
                       fullWidth
                       id='email'
                       label='Email'
+                      value={Email}
+                      InputLabelProps={{ shrink: true }}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -117,6 +157,8 @@ function ClientProfileSubPage() {
                       fullWidth
                       id='telephone'
                       label='Telephone'
+                      InputLabelProps={{ shrink: true }}
+                      value={Mobile}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -128,6 +170,7 @@ function ClientProfileSubPage() {
                   fullWidth
                   variant='contained'
                   sx={{ mt: 6, mb: 2 }}
+                  onClick={() => navigate('/client-profile-update')}
                 >
                   Edit
                 </Button>

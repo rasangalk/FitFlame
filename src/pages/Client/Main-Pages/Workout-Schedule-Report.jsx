@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactToPrint from "react-to-print";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { db } from "../../../firebase-config";
 import {
   collection,
@@ -83,6 +83,8 @@ const WorkoutSchedule = (props) => {
 
 const Example = React.forwardRef((props, ref) => {
   const [rows, setRows] = useState([]);
+  const location = useLocation();
+  const scheduleId = location.state.id;
 
   useEffect(() => {
     // const getBlogs = async () => {
@@ -100,10 +102,10 @@ const Example = React.forwardRef((props, ref) => {
     // };
 
     // getBlogs();
-    const orderId = "Q4BrUHThgVUOrbTBGm37";
+    // const orderId = "Q4BrUHThgVUOrbTBGm37";
 
     async function fetchData() {
-      const userDoc = doc(db, "shedules", orderId);
+      const userDoc = doc(db, "shedules", scheduleId);
       const docSnap = await getDoc(userDoc);
       setRows(docSnap.data());
     }

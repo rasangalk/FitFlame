@@ -15,16 +15,28 @@ import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import React, { useEffect, useState } from "react";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../firebase-config";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 const schedulesCollectionRef = collection(db, "shedules");
 
 function SchedulesSubPage() {
+  const navigate = useNavigate();
   const [schedules, setSchedules] = useState([]);
+  const [data, setData] = useState("");
+  const userNew = useSelector((state) => state.setUserData.userData);
+
+  useEffect(() => {
+    if (userNew) {
+      const userID = JSON.parse(userNew);
+      setData(userID);
+    }
+  }, [userNew]);
 
   useEffect(() => {
     const getSchedules = async () => {
       const filterdData = query(
         schedulesCollectionRef,
-        where("clientID", "==", "bVeT0xDbbWyyKJSLFYdH")
+        where("clientID", "==", data.user)
       );
       const querySnapshot = await getDocs(filterdData);
       setSchedules(
@@ -32,7 +44,7 @@ function SchedulesSubPage() {
       );
     };
     getSchedules();
-  }, []);
+  }, [data]);
 
   return (
     <Box
@@ -67,7 +79,7 @@ function SchedulesSubPage() {
                   variant="h8"
                   sx={{ fontWeight: "bold", fontSize: "17.5px" }}
                 >
-                  Workout Schedule
+                  Meal Plan
                 </Typography>
               </Box>
               <Box
@@ -126,7 +138,14 @@ function SchedulesSubPage() {
                           <TableCell align="right">{row.trainerName}</TableCell>
                           <TableCell align="right">{row.date}</TableCell>
                           <TableCell align="right">
-                            <IconButton sx={{ color: "#3C56F5" }}>
+                            <IconButton
+                              sx={{ color: "#3C56F5" }}
+                              onClick={() => {
+                                navigate(`/client-workout-schedule-report`, {
+                                  state: { id: row.id },
+                                });
+                              }}
+                            >
                               <FileDownloadOutlinedIcon />
                             </IconButton>
                           </TableCell>
