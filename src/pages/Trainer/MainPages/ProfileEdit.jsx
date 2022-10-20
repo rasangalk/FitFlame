@@ -1,3 +1,4 @@
+
 import { Close } from '@mui/icons-material'
 import { Box, Button, Grid, TextField, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
@@ -10,6 +11,7 @@ import { useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
+
 const ProfileEdit = () => {
   const navigate = useNavigate()
 
@@ -21,7 +23,9 @@ const ProfileEdit = () => {
   const [Mobile, setMobile] = useState()
   const [About, setAbout] = useState()
 
+
   const trainerRef = doc(db, 'users', '5qO5w7dwRvzo3YeCoppe')
+
 
   const ErrMsg = (errMsg) => {
     toast.error(errMsg, {
@@ -46,20 +50,21 @@ const ProfileEdit = () => {
   }, [])
 
   const updateProfile = async () => {
-    const trainerDoc = doc(db, 'users', '5qO5w7dwRvzo3YeCoppe')
+
+    const trainerDoc = doc(db, 'users', '5qO5w7dwRvzo3YeCoppe');
 
     if (selected === '' && imagePreview === null) {
-      ErrMsg('Please choose a cover image')
+      ErrMsg('Please choose a cover image');
     } else if (selected === '' && imagePreview !== '') {
       /* this section handles if the user does not modify the image but other text fields*/
       if (Name === '') {
-        ErrMsg('Please fill the required fields!')
+        ErrMsg('Please fill the required fields!');
       } else if (Email === '') {
-        ErrMsg('Please fill the required fields!')
+        ErrMsg('Please fill the required fields!');
       } else if (Mobile === '') {
-        ErrMsg('Please select an album category!')
+        ErrMsg('Please select an album category!');
       } else if (About === '') {
-        ErrMsg('Please fill the required fields!')
+        ErrMsg('Please fill the required fields!');
       } else {
         const newFields = {
           name: Name,
@@ -71,19 +76,22 @@ const ProfileEdit = () => {
 
         await updateDoc(trainerDoc, newFields).then(
           navigate('/trainer/profile')
-        )
+
+        );
       }
     } else if (selected !== '' && imagePreview === null) {
-      ErrMsg('Something wrong with the image preview')
+      ErrMsg('Something wrong with the image preview');
     } else {
       //handle image upload and then update the document
-      const imageRef = ref(storage, `TrainerProfile/${selected.name}`)
+      const imageRef = ref(storage, `TrainerProfile/${selected.name}`);
       if (selected === '') {
-        ErrMsg('Cover image must be added!')
+        ErrMsg('Cover image must be added!');
+
       } else {
         uploadBytes(imageRef, selected).then(() => {
           getDownloadURL(imageRef).then((url) => {
             if (Name === '') {
+
               ErrMsg('Fill the required fields!')
             } else if (url === '') {
               ErrMsg('Cover URL Error!')
@@ -93,6 +101,7 @@ const ProfileEdit = () => {
               ErrMsg('Please select an album category!')
             } else if (About === '') {
               ErrMsg('Fill the required fields!')
+
             } else {
               const newFields = {
                 name: Name,
@@ -104,7 +113,9 @@ const ProfileEdit = () => {
 
               updateDoc(trainerDoc, newFields).then(
                 navigate('/trainer/profile')
+
               )
+
             }
           })
         })
@@ -113,9 +124,11 @@ const ProfileEdit = () => {
   }
 
   const handleImageChange = (e) => {
+
     const selected = e.target.files[0]
     setSelected(selected)
     const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/jpg']
+
     if (selected && ALLOWED_TYPES.includes(selected.type)) {
       let reader = new FileReader()
       reader.onloadend = () => {
@@ -123,7 +136,9 @@ const ProfileEdit = () => {
       }
       reader.readAsDataURL(selected)
     } else {
+
       ErrMsg('File type is not supported!')
+
     }
   }
   return (
@@ -198,8 +213,10 @@ const ProfileEdit = () => {
                     <Close
                       sx={{ cursor: 'pointer' }}
                       onClick={() => {
+
                         setImagePreview(null)
                         setSelected('')
+
                       }}
                     />
                   </>
@@ -242,7 +259,9 @@ const ProfileEdit = () => {
                     id='outlined-basic'
                     label='Mobile'
                     variant='outlined'
-                    value={'0' + Mobile}
+
+                    value={Mobile}
+
                     InputLabelProps={{ shrink: true }}
                     onChange={(e) => setMobile(e.target.value)}
                   />

@@ -1,3 +1,4 @@
+
 import { CssBaseline } from "@mui/material";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Blogs from "./pages/Client/Main-Pages/Blogs";
@@ -21,6 +22,7 @@ import PasswordReset from "./pages/User/Main-Pages/PasswordReset";
 import { UserAuthContextProvider } from "./Context/UserAuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
+
 import TrainerClients from "./pages/Trainer/MainPages/Clients";
 import TrainerOrders from "./pages/Trainer/MainPages/Orders";
 import TrainerPackages from "./pages/Trainer/MainPages/Packages";
@@ -34,12 +36,14 @@ import TrainerCreatepackage from "./pages/Trainer/MainPages/Createpackage";
 import TrainerUpdatePackage from "./pages/Trainer/MainPages/UpdatePackage";
 import TrainerClientDetails from "./pages/Trainer/MainPages/ClientDetails";
 
+
 import BlogList from "./pages/Admin/MainPages/BlogList";
 import AdminUserList from "./pages/Admin/MainPages/AdminUserList";
 import BlogUpdate from "./pages/Admin/MainPages/BlogUpdate";
 import BlogViewAdmin from "./pages/Admin/MainPages/BlogView";
 import BlogCreate from "./pages/Admin/MainPages/BlogCreate";
 import WorkoutScheduleReport from "./pages/Client/Main-Pages/Workout-Schedule-Report";
+
 
 export function App() {
   const dispatch = useDispatch();
@@ -159,7 +163,7 @@ export function App() {
             }
           />
           <Route
-            path="/client-workout-schedule-report"
+            path='/client-workout-schedule-report'
             element={<WorkoutScheduleReport />}
           />
 
