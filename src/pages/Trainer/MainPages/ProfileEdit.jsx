@@ -1,31 +1,27 @@
-
-import { Close } from '@mui/icons-material'
-import { Box, Button, Grid, TextField, Typography } from '@mui/material'
-import React, { useEffect, useState } from 'react'
-import AppBarTrainer from '../../../components/Trainer/AppBarTrainer'
-import { db } from '../../../firebase-config'
-import { doc, getDoc, updateDoc } from 'firebase/firestore'
-import { storage } from './../../../firebase-config'
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { useNavigate } from 'react-router-dom'
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-
+import { Close } from '@mui/icons-material';
+import { Box, Button, Grid, TextField, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import AppBarTrainer from '../../../components/Trainer/AppBarTrainer';
+import { db } from '../../../firebase-config';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { storage } from './../../../firebase-config';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProfileEdit = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const [selected, setSelected] = useState([])
-  const [imagePreview, setImagePreview] = useState(null)
+  const [selected, setSelected] = useState([]);
+  const [imagePreview, setImagePreview] = useState(null);
 
-  const [Name, setName] = useState()
-  const [Email, setEmail] = useState()
-  const [Mobile, setMobile] = useState()
-  const [About, setAbout] = useState()
+  const [Name, setName] = useState();
+  const [Email, setEmail] = useState();
+  const [Mobile, setMobile] = useState();
+  const [About, setAbout] = useState();
 
-
-  const trainerRef = doc(db, 'users', '5qO5w7dwRvzo3YeCoppe')
-
+  const trainerRef = doc(db, 'users', '5qO5w7dwRvzo3YeCoppe');
 
   const ErrMsg = (errMsg) => {
     toast.error(errMsg, {
@@ -36,21 +32,20 @@ const ProfileEdit = () => {
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-    })
-  }
+    });
+  };
 
   useEffect(() => {
     getDoc(trainerRef).then((doc) => {
-      setName(doc.data().name)
-      setEmail(doc.data().email)
-      setMobile(doc.data().mobile)
-      setAbout(doc.data().description)
-      setImagePreview(doc.data().picture)
-    })
-  }, [])
+      setName(doc.data().name);
+      setEmail(doc.data().email);
+      setMobile(doc.data().mobile);
+      setAbout(doc.data().description);
+      setImagePreview(doc.data().picture);
+    });
+  }, []);
 
   const updateProfile = async () => {
-
     const trainerDoc = doc(db, 'users', '5qO5w7dwRvzo3YeCoppe');
 
     if (selected === '' && imagePreview === null) {
@@ -72,11 +67,10 @@ const ProfileEdit = () => {
           mobile: Mobile,
           picture: imagePreview,
           description: About,
-        }
+        };
 
         await updateDoc(trainerDoc, newFields).then(
           navigate('/trainer/profile')
-
         );
       }
     } else if (selected !== '' && imagePreview === null) {
@@ -86,61 +80,53 @@ const ProfileEdit = () => {
       const imageRef = ref(storage, `TrainerProfile/${selected.name}`);
       if (selected === '') {
         ErrMsg('Cover image must be added!');
-
       } else {
         uploadBytes(imageRef, selected).then(() => {
           getDownloadURL(imageRef).then((url) => {
             if (Name === '') {
-
-              ErrMsg('Fill the required fields!')
+              ErrMsg('Fill the required fields!');
             } else if (url === '') {
-              ErrMsg('Cover URL Error!')
+              ErrMsg('Cover URL Error!');
             } else if (Email === '') {
-              ErrMsg('Fill the required fields!')
+              ErrMsg('Fill the required fields!');
             } else if (Mobile === '') {
-              ErrMsg('Please select an album category!')
+              ErrMsg('Please select an album category!');
             } else if (About === '') {
-              ErrMsg('Fill the required fields!')
-
+              ErrMsg('Fill the required fields!');
             } else {
               const newFields = {
                 name: Name,
                 email: Email,
                 mobile: Mobile,
-
                 description: About,
-              }
+                picture: url,
+              };
 
               updateDoc(trainerDoc, newFields).then(
                 navigate('/trainer/profile')
-
-              )
-
+              );
             }
-          })
-        })
+          });
+        });
       }
     }
-  }
+  };
 
   const handleImageChange = (e) => {
-
-    const selected = e.target.files[0]
-    setSelected(selected)
-    const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/jpg']
+    const selected = e.target.files[0];
+    setSelected(selected);
+    const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/jpg'];
 
     if (selected && ALLOWED_TYPES.includes(selected.type)) {
-      let reader = new FileReader()
+      let reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result)
-      }
-      reader.readAsDataURL(selected)
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(selected);
     } else {
-
-      ErrMsg('File type is not supported!')
-
+      ErrMsg('File type is not supported!');
     }
-  }
+  };
   return (
     <Box sx={{ height: '100vh' }}>
       <AppBarTrainer trainerName='Hi, Randy!' />
@@ -213,10 +199,8 @@ const ProfileEdit = () => {
                     <Close
                       sx={{ cursor: 'pointer' }}
                       onClick={() => {
-
-                        setImagePreview(null)
-                        setSelected('')
-
+                        setImagePreview(null);
+                        setSelected('');
                       }}
                     />
                   </>
@@ -259,9 +243,7 @@ const ProfileEdit = () => {
                     id='outlined-basic'
                     label='Mobile'
                     variant='outlined'
-
                     value={Mobile}
-
                     InputLabelProps={{ shrink: true }}
                     onChange={(e) => setMobile(e.target.value)}
                   />
@@ -294,7 +276,7 @@ const ProfileEdit = () => {
         </Box>
       </Box>
     </Box>
-  )
-}
+  );
+};
 
-export default ProfileEdit
+export default ProfileEdit;
